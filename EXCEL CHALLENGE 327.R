@@ -7,15 +7,20 @@
 library(tidyverse)
 library(readxl) 
 
-df <- read_xlsx("Highest Marks Names Subjects.xlsx",range = "A1:E10")
+# Read data from Excel file
+df <- read_xlsx("Highest Marks Names Subjects.xlsx", range = "A1:E10")
 
-Matrix <- as.matrix(df[,2:ncol(df)])
-Top3 <- unique(sort(as.vector(Matrix),decreasing = TRUE))[1:3]
+# Extract the matrix of marks from the data frame
+Matrix <- as.matrix(df[, 2:ncol(df)])
 
+# Find the top 3 unique marks
+Top3 <- unique(sort(as.vector(Matrix), decreasing = TRUE))[1:3]
+
+# Create a tidy data frame and filter for the top 3 marks, sorting as specified
 Answer <- df |>
-  pivot_longer(cols = 2:ncol(df),names_to = c("Subjects"),values_to = ("Marks")) |>
-  filter(between(Marks,min(Top3),max(Top3))) |>
+  pivot_longer(cols = 2:ncol(df), names_to = "Subjects", values_to = "Marks") |>
+  filter(between(Marks, min(Top3), max(Top3))) |>
   arrange(desc(Marks), Names, Subjects)
 
-
+# Display the result
 Answer
