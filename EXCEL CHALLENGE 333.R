@@ -17,7 +17,7 @@ duplicated_letters <- duplicated(split_word) #Check if value is duplicated (TRUE
 first_duplicated <- match(TRUE, duplicated_letters) # Check position of first duplicate
 if (!is.na(first_duplicated)) {
   result <- paste(split_word[1:(first_duplicated - 1)], collapse = "") #Take values from first to duplicate - 1
-  result <- str_to_title(result) #Caitalize first letter
+  result <- str_to_title(result) #Capitalize first letter
 } else {
   result <- str_to_title(word)
 }
