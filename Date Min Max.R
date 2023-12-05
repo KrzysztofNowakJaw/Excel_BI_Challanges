@@ -23,7 +23,7 @@ Answer <- df |>
             ,.by = c("Year","Half")) |>
   #apply new dae format for every date column
   mutate(across(where(is.Date),\(x) format(x,"%d-%b-%Y"))) |>
-  #Sortvalues
+  #Sort values
   arrange(Year,Half)
 
 Answer
