@@ -26,4 +26,33 @@ Answer <- df |>
   #Sort values
   arrange(Year,Half)
 
-Answer
+ df %>%
+  mutate(Year = year(Date),
+         Half = str_c(semester(Date),"H")) %>%
+  group_by(Year, Half) %>%
+  summarise(`Min Date` = min(Date),
+            `Max Date` = max(Date)) %>%
+  ungroup()
+
+ 
+ # WITH Date_Parts AS (
+ #   
+ #   SELECT
+ #   data
+ #   ,date_part('year',data) AS Year_c
+ #   ,case when date_part('month',data) <= 6 then '1H' else '2H' end AS Half
+ #   
+ #   FROM DatesTask ) 
+ # 
+ # SELECT
+ # 
+ # Year_c,
+ # Half,
+ # TO_CHAR(min(data),'DD-Mon-YYYY') AS MinDate
+ # ,TO_CHAR(max(data),'DD-Mon-YYYY') AS MaxDate
+ # 
+ # FROM Date_Parts
+ # 
+ # group by 1,2
+ # 
+ # Order by 1,2
