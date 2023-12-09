@@ -1,8 +1,10 @@
 #Link to challange
 #https://onedrive.live.com/view.aspx?resid=E11B26EEAACB7947%218726&authkey=!API8qMVVBzNF5fg
 
+#Load Libraries
 library(tidyverse)
 library(readxl) 
+library(gt)
 
 #Load Data
 TableA <- read_xlsx("PQ_Challenge_137.xlsx", range = "A1:B5")
