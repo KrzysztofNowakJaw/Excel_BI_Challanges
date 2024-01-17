@@ -7,6 +7,8 @@ library(readxl)
 df <- read_xlsx("Power_Query_Challenge_148.xlsx",range = "A1:A12")
 Expected <- read_xlsx("Power_Query_Challenge_148.xlsx",range = "C1:N12")
 
+Expected <- Expected |>
+  mutate(across(2:ncol(Expected), \(x) as.numeric(x)))
 
 Answer <- df |>
   separate_longer_delim(Fruits,", ") |>
@@ -17,5 +19,3 @@ Answer <- df |>
   mutate(Headers = Fruits) |>
   pivot_wider(id_cols = Fruits,names_from = Headers,values_from = Count)
 
-
-Answer
