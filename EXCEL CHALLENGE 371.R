@@ -23,4 +23,6 @@ Answer <- df |>
   summarise(Answer = paste(products,collapse = ","),.by = Dates)
 
 Answer
-
+Range
+Range$from_date
+Range$to_date
