@@ -1,0 +1,81 @@
+#Link to challange https://www.linkedin.com/feed/update/urn:li:activity:7159395081773301760/
+
+#SQL
+
+WITH Indexed AS (
+    SELECT 
+        *,
+        ROW_NUMBER() OVER () AS RN 
+    FROM Flights
+),
+
+SecondStep AS (
+    SELECT
+        pilot,
+        RN,
+        ROUND(((EXTRACT(EPOCH FROM (flight_end - flight_start)))::DECIMAL), 2) / 3600 AS Fly_Time,
+        ROUND(COALESCE(EXTRACT(EPOCH FROM (flight_start - LAG(flight_end) OVER (PARTITION BY pilot ORDER BY RN))), 0), 2) / 3600 AS Rest_Time
+    FROM Indexed
+)
+
+SELECT
+    pilot,
+    ROUND(SUM(Fly_Time), 2) AS Total_Fly_Time,
+    ROUND(SUM(Rest_Time), 2) AS Total_Rest_Time
+FROM SecondStep
+GROUP BY 1;
+
+#R & GT Table
+
+
+library(tidyverse)
+library(readxl)
+library(gt)
+
+filename <- "PQ_Challenge_153.xlsx"
+
+df <- read_xlsx(path = filename,range = "A1:C13") |> janitor::clean_names()
+
+df
+
+Answer <- df |>
+  group_by(pilot) |>
+  mutate(
+    Fly_Time = flight_end - flight_start,
+    Rest_Time = flight_start - lag(flight_end),
+    Rest_Time = ifelse(is.na(Rest_Time), 0, Rest_Time)
+  ) |>
+  ungroup() |>
+  summarise('Fly Time' = sum(Fly_Time,na.rm = TRUE),
+            'Rest Time' = sum(Rest_Time,na.rm = TRUE),.by = pilot) |>
+  mutate(across(2:3,\(x) as.double(x/3600))) |>
+  rename(Pilot = pilot) 
+
+BaseTab <- Answer |>
+ gt(rowname_col = "Pilot") 
+
+BaseTab |>
+  tab_style(style = cell_text(weight = "bold"),
+            locations = cells_column_labels()) |>
+  tab_style(
+    style =
+      cell_text(color = "darkblue", weight = "bold"),
+    locations = cells_body(columns = `Fly Time`,
+                           rows = `Fly Time` == max(`Fly Time`))
+  ) |>
+  tab_style(
+    style =
+      cell_text(color = "darkblue", weight = "bold"),
+    locations = cells_body(columns = `Rest Time`,
+                           rows = `Rest Time` == max(`Rest Time`))
+  ) |>
+  fmt_number(columns = 2:3, decimals = 2) |>
+  tab_header(
+    title = md("**Pilots metrics**"),
+    subtitle = html(
+      "<span style='font-weight:bold;color:darkblue'>Coyote</span>",
+      " reported both the most flight and rest hours"
+    )
+  ) |>
+  tab_options(heading.align = "left") |>
+  tab_source_note(source_note = md("**Source:** Excel BI challanges"))
