@@ -1,0 +1,21 @@
+#link to challange
+#https://www.linkedin.com/feed/update/urn:li:activity:7164466865094828032/
+
+library(tidyverse)
+library(readxl)
+
+filename <- "PQ_Challenge_157.xlsx"
+
+df <- read_xlsx(path = filename,range = "A1:E31") 
+
+LeaveNewValues <- function(Data) {
+  
+  ifelse(cumany(Data != lag(Data)) == TRUE & Data != lag(Data),Data,NA)
+  
+}
+
+Answer <- df |>
+  group_by(Group) |>
+  mutate(across(2:ncol(df)-1,\(x) LeaveNewValues(x)))
+
+
