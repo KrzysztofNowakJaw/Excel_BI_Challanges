@@ -1,0 +1,31 @@
+#Link to challange
+#https://www.linkedin.com/feed/update/urn:li:activity:7165555694702727169/
+
+library(tidyverse)
+library(readxl)
+
+filename <- "Excel_Challenge_395 - Connected Points.xlsx"
+
+df <- read_xlsx(filename,range = "A1:D8")
+
+df <- df |> 
+  mutate(Index = row_number(), .before = Coord1)
+
+df
+
+Verify <- df %>%
+  pivot_longer(cols = -c("Index"), names_to = "CoordNumber", values_to = "Digits") %>%
+  group_by(Index) %>%
+  filter(!is.na(Digits)) |>
+  mutate(X = str_extract(Digits, "^\\d+"),
+         Y = str_extract(Digits, "\\d+$"),
+         IsSame = ifelse(
+           (Y == lead(X) & row_number() <= max(row_number()) - 1) | row_number() == max(row_number()), "YES", "NO"),
+         Answer = ifelse(all(IsSame == "YES"), "YES", "NO")) |>
+select(Index,Answer)
+
+
+Answer <- df |>
+  inner_join(Verify,by = "Index",multiple = "first")
+
+Answer
