@@ -1,3 +1,5 @@
+#First solution in R, under it SQL
+
 #Link to challange
 #https://www.linkedin.com/feed/update/urn:li:activity:7165555694702727169/
 
@@ -28,4 +30,53 @@ select(Index,Answer)
 Answer <- df |>
   inner_join(Verify,by = "Index",multiple = "first")
 
-Answer
+#SQL
+
+WITH Base AS (
+    SELECT *,
+        unnest(ARRAY[coord1, coord2, coord3, coord4]) AS Combined,
+        ROW_NUMBER() OVER () AS Indeks
+    FROM Coords
+),
+Intermediate AS (
+    SELECT 
+        Indeks,
+        Combined,
+        split_part(Combined, ', ', 1) AS X,
+        split_part(Combined, ', ', 2) AS Y,
+        COUNT(Indeks) OVER (PARTITION BY Indeks) AS RowsInGroup,
+        ROW_NUMBER() OVER (PARTITION BY Indeks) AS InternalI
+    FROM Base
+    WHERE Combined IS NOT NULL
+),
+Lastcalc AS (	
+    SELECT 
+        Indeks,
+        Combined,
+        RowsInGroup,
+        X,
+        Y,
+        InternalI,
+        CASE WHEN (
+            (Y = LEAD(X) OVER (PARTITION BY Indeks)) OR InternalI = RowsInGroup)
+        THEN 1 ELSE 0 END AS Checks
+    FROM Intermediate
+)
+SELECT DISTINCT
+    Base.Indeks,
+    coord1,
+    coord2,
+    coord3,
+    coord4,
+    COALESCE(Answer, 'NO') AS Answer
+FROM Base
+LEFT JOIN (
+    SELECT 
+        Indeks,
+        'YES' AS Answer
+    FROM Lastcalc
+    GROUP BY Indeks, RowsInGroup
+    HAVING SUM(Checks) = RowsInGroup
+) AS LC ON LC.Indeks = Base.Indeks
+ORDER BY Base.Indeks;
+
