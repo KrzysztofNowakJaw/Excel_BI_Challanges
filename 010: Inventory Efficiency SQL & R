@@ -1,0 +1,70 @@
+#Challange:
+https://www.linkedin.com/posts/omid-motamedisedeh-74aba166_excelchallenge-powerquerychllenge-excel-activity-7165858484083736576-_L9f?utm_source=share&utm_medium=member_desktop
+
+#SQL
+
+-- Challange:
+-- https://www.linkedin.com/posts/omid-motamedisedeh-74aba166_excelchallenge-powerquerychllenge-excel-activity-7165858484083736576-_L9f?utm_source=share&utm_medium=member_desktop
+WITH ByDateCalc AS (
+    SELECT 
+        date,
+        SUM(inventory) AS Available,
+        MIN(inventory) AS LowestAvailability
+    FROM Inventory
+    GROUP BY date
+),
+Requirements AS (
+    SELECT 
+        date,
+        MIN(inventory / CASE 
+            WHEN material = 'A' THEN 1
+            WHEN material = 'B' THEN 2
+            WHEN material = 'C' THEN 3
+        END) AS LowestFP,
+        SUM(CASE 
+            WHEN material = 'A' THEN 1
+            WHEN material = 'B' THEN 2
+            WHEN material = 'C' THEN 3
+        END) AS RequirementsFULL
+    FROM Inventory
+    GROUP BY date
+)
+
+SELECT 
+    DISTINCT
+    R.date,
+    (SUM(RequirementsFULL * LowestFP) / BD.Available * 100)::INT::TEXT || ' %' AS CalculatedColumn
+FROM Requirements AS R
+JOIN ByDateCalc AS BD ON BD.date = R.date
+GROUP BY R.date, BD.Available
+ORDER BY R.date;
+
+
+#R
+
+library(tidyverse)
+library(readxl)
+
+
+filename <- "CH-0010.xlsx"
+
+df <- read_xlsx(filename,range = "A1:C16",col_types = c("date","text","numeric"))
+
+df <- df |>
+  mutate(Requirements = case_when(Material == "A" ~ 1,
+                                  Material == "B" ~ 2,
+                                  .default = 3))
+
+df |> 
+  group_by(Date) |>
+  mutate(Available = sum(Inventory),
+         LowestAvailability = min(Inventory),
+         OneProd = sum(Requirements),
+         fullPackages = Inventory/Requirements,
+         LowestFP = floor(min(fullPackages)),
+         ToBeused = sum(Requirements * LowestFP)) |>
+  ungroup() |>
+  reframe(Ratio = scales::percent(ToBeused/Available),.by = "Date") |>
+  unique()
+
+
