@@ -1,0 +1,40 @@
+#Link to challange
+#https://www.linkedin.com/posts/excelbi_excel-challenge-problem-activity-7166280449667854336-BG0T?utm_source=share&utm_medium=member_desktop
+
+library(tidyverse)
+library(readxl)
+filename <- "Excel_Challenge_397 - Tri Numeral Alphabets Cipher.xlsx"
+df <- read_xlsx(filename,range = "A1:A10") |>janitor::clean_names()
+Expected <- read_xlsx(filename,range = "B1:B10") |>janitor::clean_names()
+
+Alphabet <- data.frame(Alphabet = letters) |>
+  mutate(Index = row_number())
+
+group_indices <- c(11, 12, 13, 21, 22, 23, 31, 32, 33)
+repeated_indices <- rep(group_indices, each = 3)
+numeric_indices <- rep(1:3, length.out = nrow(Alphabet))
+combined_indices <- paste(repeated_indices, numeric_indices, sep = ",")
+
+Prefixes <- data.frame(Values= combined_indices) |> 
+  mutate(Index = row_number()) 
+
+BaseTable <- Alphabet |>
+  inner_join(Prefixes,by = "Index") |>
+  mutate(Value = str_remove(Values,",")) |>
+  select(Alphabet,Value)
+
+Answer <- df |>
+  mutate(Index = row_number()) |>
+  rowwise() |>
+  mutate(Alphabet = str_split(plain_text,"")) |>
+  group_by(Index) |>
+  unnest_longer(Alphabet) |>
+  inner_join(BaseTable,by = "Alphabet") |>
+  mutate(Answer = paste(Value,collapse = "")) |>
+  select(plain_text,Answer) |>
+  unique() |>
+  arrange(Index) |>
+  bind_cols(Expected) |>
+  mutate(test = Answer == answer_expected )
+
+Answer
