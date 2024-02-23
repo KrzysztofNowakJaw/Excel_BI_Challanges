@@ -1,0 +1,18 @@
+#Link to challange
+#https://www.linkedin.com/posts/omid-motamedisedeh-74aba166_identify-excelchallenge-powerquerychllenge-activity-7166573571031396352-6JqU?utm_source=share&utm_medium=member_desktop
+
+library(tidyverse)
+library(readxl)
+
+filename <- "CH-011-Identify Frequent Code.xlsx"
+
+df <- read_xlsx(filename,range = "B2:E16")
+
+Answer <- df |>
+  pivot_longer(everything()) |>
+  unique() |>
+  summarise(Lists = n(),.by = value) |>
+  filter(Lists >= 3) |>
+  arrange(str_extract(value,"\\d+"))
+
+Answer
