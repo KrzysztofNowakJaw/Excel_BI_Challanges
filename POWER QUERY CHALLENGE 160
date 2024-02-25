@@ -1,0 +1,26 @@
+#Link to challange
+#https://www.linkedin.com/posts/excelbi_challenge-powerquerychallenge-daxchallenge-activity-7167367606759362560-1Fzr?utm_source=share&utm_medium=member_desktop
+
+cities_data <- data.frame(
+  Cities = c("Beijing", "Delhi", "Dhaka", "Jakarta", "Moscow", "New York", "Tokyo"),
+  x = c(89, 16, 43, 53, 45, 82, 33),
+  y = c(34, 31, 6, 37, 60, 73, 33)
+)
+
+Distance <- function(x1,x2,y1,y2) {
+  sqrt((x2-x1)^2+(y2-y1)^2)
+}
+
+CitiesCross <- cities_data |>
+  cross_join(cities_data,suffix = c('1','2'))
+
+CitiesCross |>
+  mutate(Dist = Distance(x1 = x1,x2 = x2,y1 = y1,y2 = y2)) |>
+  select(Cities1,Cities2,Dist) |>
+  unique() |>
+  rename(Cities = Cities1) |>
+  pivot_wider(id_cols = Cities,names_from = Cities2,values_from = Dist,
+              values_fn = list(Dist = function(x) round(x, digits = 2))) |>
+  gt::gt() 
+  
+
