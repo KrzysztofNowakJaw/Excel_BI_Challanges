@@ -1,0 +1,34 @@
+# Load necessary libraries
+library(tidyverse)
+library(readxl)
+
+# Specify the Excel file name
+filename <- "Excel_Challenge_399 - Counter Dictionary.xlsx"
+
+# Read the data from column A in the Excel file
+df <- read_xlsx(filename, range = "A1:A10")
+
+# Read the expected answers from column B and clean column names
+Expected <- read_xlsx(filename, range = "B1:B10") |> janitor::clean_names()
+
+# Define a function 'CountLetters' to count the frequency of each character in a string
+CountLetters <- function(x) {
+  tibble(Char = strsplit(x, "")) |>
+    unnest(Char) |>
+    group_by(Char) |>
+    count() |>
+    mutate(Answer = paste(Char, as.character(n), sep = ":")) |>
+    ungroup() |>
+    summarise(Answer = paste(Answer, collapse = ", ")) |>
+    pull(Answer)
+}
+
+# Apply 'CountLetters' to each string in the 'df' data frame
+Answer <- df |>
+  mutate(MyAnswer = map_chr(String, CountLetters)) |>
+  bind_cols(Expected) |>
+  mutate(Test = MyAnswer == answer_expected)
+
+# Display the final result tibble
+Answer
+
