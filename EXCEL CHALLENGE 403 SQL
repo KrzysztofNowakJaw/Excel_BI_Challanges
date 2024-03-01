@@ -1,0 +1,68 @@
+#Link to challange
+#https://www.linkedin.com/posts/excelbi_excel-challenge-problem-activity-7169179556946329600-4n_0?utm_source=share&utm_medium=member_desktop
+
+
+
+-- Generate a calendar of years divided into buckets of 5 consecutive years
+WITH Calendar AS (
+    SELECT 
+        Years,
+        (ROW_NUMBER() OVER (ORDER BY Years) - 1) / 5 AS Bucket
+    FROM 
+        generate_series(
+            (SELECT min(year) FROM FiveYears),
+            -- Calculate the end year based on the max year, adding 1 if max year is odd
+            (SELECT 
+                CASE 
+                    WHEN (max(year) % 2) = 0 THEN max(year)
+                    ELSE max(year) + 1
+                END
+             FROM FiveYears)
+        ) AS Years
+),
+
+-- Calculate summary statistics for each bucket
+Summary AS (
+    SELECT 
+        bucket,
+        min(years) AS FY,
+        max(years) AS LY,
+        SUM(COALESCE(value, 0)) AS Value
+    FROM 
+        Calendar AS C
+    LEFT JOIN  
+        FiveYears AS FY ON C.Years = FY.year
+    GROUP BY 
+        bucket
+),
+
+-- Calculate percentages and create buckets
+Buckets AS (
+    SELECT 
+        bucket,
+        fy::character(4) || '-' || ly::character(4) AS Range,
+        Value,
+        (ROUND(((Value / SUM(Value) OVER ()) * 100), 0))::INT AS PCT
+    FROM 
+        Summary
+)
+
+-- Final results, presenting range, value, and percentage
+SELECT 
+    Range,
+    Value,
+    PCT::Character(3) || '%' AS PCT
+FROM 
+    Buckets
+
+-- Append a row for the Grand Total
+UNION
+
+SELECT 
+    'Grand Total' AS Range,
+    SUM(Value) AS Value,
+    ROUND(SUM(pct), 1)::INT::character(3) || '%' AS PCT
+FROM 
+    Buckets
+ORDER BY 
+    Range;
