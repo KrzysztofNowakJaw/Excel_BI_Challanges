@@ -1,0 +1,26 @@
+#link to challange
+#https://www.linkedin.com/posts/excelbi_challenge-powerquerychallenge-daxchallenge-activity-7169904320287555584-IBcD?utm_source=share&utm_medium=member_desktop
+
+library(tidyverse)
+
+# Create a data frame with the given strings
+df <- data.frame(
+  strings = c("A#23TY", "WEQ$1489", "5$67QA", 
+              "ER23#A#709Q 34@", "OP$00 & W?34 & ABC@89", "(Q)(8)(9)(A)99)(78)", "342-A-76, L,3456", "A5A7D&43FG", "(09)(ABC(000)")
+)
+
+
+FindPattern <- function(Text) {
+  
+  Pattern <- "[[:alpha:]]{1}([[[:punct:]]\\$\\@\\s])\\d{2}" #Define pattern
+  fullmatch <- str_extract_all(Text,pattern = Pattern)[[1]] #Extract all values which match pattern
+  RemoveSpecials <- str_remove_all(fullmatch,pattern = "[^[[:alpha:]]\\d]") #Leave only letters and digits
+  combine <- paste(unlist(RemoveSpecials),collapse = ",") #combine list elements with "," as separator
+  print(combine)
+  
+}
+
+Answer <- df |>
+  mutate(Answer = map_chr(strings,FindPattern))
+
+Answer
