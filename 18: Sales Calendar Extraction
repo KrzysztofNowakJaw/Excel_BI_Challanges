@@ -1,0 +1,47 @@
+# Load necessary libraries for data manipulation and visualization
+library(tidyverse)  # For data manipulation
+library(lubridate)   # For date-time operations
+library(readxl)      # For reading Excel files
+library(aweek)       # For week-related functions
+library(gt)          # For creating styled tables
+
+# Read data from the Excel file and extract relevant columns
+filename <- 'CH-018 Sales Calendar Extraction.xlsx'
+df <- read_xlsx(filename, range = "B2:C121", col_types = c("date", "numeric"))
+
+# Determine the month to focus on for generating the sales calendar
+MonthInScope <- read_xlsx(filename, range = "F2:F3")
+MonthInScope <- MonthInScope$Month
+
+# Calculate the average daily sales for the selected month
+Average <- round(mean(CalendarStart$Quantity, na.rm = TRUE))
+
+# Create a full calendar with sales performance categories for each day
+FullCalendar <- df %>%
+  filter(Date >= start_date) %>%
+  complete(Date = seq.Date(from = start_date, max(as.Date(Date)), by = 'day')) %>%
+  mutate(
+    Quantity = coalesce(Quantity, 0),
+    Quantity = ifelse(month(Date) != MonthInScope, NA, Quantity),
+    Category = case_when(
+      Quantity == 0 ~ '-',
+      Quantity > Average ~ 'U',
+      Quantity <= Average ~ 'L',
+      TRUE ~ NA
+    ),
+    Wday = format(Date, '%a'),
+    FakeDate = as.Date(paste(as.numeric(year(Date)), "01", as.numeric(day(Date)), sep = "-"),
+                       WeekNumber = week(Date),
+                       WeekNumber = consecutive_id(WeekNumber)
+    ) %>%
+      filter(Date <= max(CalendarStart$Date) + 1)
+    
+# Pivot the calendar data to display in a tabular format with weeks and weekdays
+Pivoted <- FullCalendar %>%
+      pivot_wider(id_cols = c("WeekNumber"), names_from = Wday, values_from = Category)
+
+# Generate a styled table to present the sales calendar visually
+Answer <- Pivoted %>%
+  gt()
+
+Answer
