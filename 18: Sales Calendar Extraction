@@ -1,3 +1,6 @@
+#Link to challnage:
+#https://www.linkedin.com/posts/omid-motamedisedeh-74aba166_excelchallenge-powerquerychllenge-excel-activity-7171776673149775872-5k9C?utm_source=share&utm_medium=member_desktop
+
 # Load necessary libraries for data manipulation and visualization
 library(tidyverse)  # For data manipulation
 library(lubridate)   # For date-time operations
