@@ -1,0 +1,42 @@
+#Link to challange
+#https://www.linkedin.com/feed/update/urn:li:activity:7172078655110688768?updateEntityUrn=urn%3Ali%3Afs_feedUpdate%3A%28V2%2Curn%3Ali%3Aactivity%3A7172078655110688768%29
+
+# Load necessary libraries
+library(tidyverse)
+library(readxl)
+
+# Read data from Excel file
+filename <- 'PQ_Challenge_163.xlsx'
+T1 <- read_xlsx(filename, range = "A1:B29") |> janitor::clean_names()
+T2 <- read_xlsx(filename, range = "D1:D12") |> janitor::clean_names()
+
+# Define regex patterns for data extraction
+Pattern <- '\\b[[:upper:]]{2}\\s?[0-9]{2}\\s?[[:upper:]]{2}\\s?\\d{4}'
+FirstDigits <- '\\d{2}(?=[[:upper:]]{2})'
+LastDigits <- '\\d{4}$'
+
+# Preprocess T2 data
+T2 <- T2 |>
+  mutate(Index = row_number(), .before = data)
+
+# Transform the data based on regex patterns
+Transformed <- T2 |>
+  mutate(
+    Extracted = str_extract_all(data, Pattern)) |>
+  unnest_longer(Extracted) |>
+  select(-c("data")) |>
+  mutate(
+    Extracted = str_remove_all(Extracted, "\\s"),
+    vehicle_code = str_extract(Extracted, "^[[:upper:]]{2}"),
+    FirstDigits = str_extract(Extracted, FirstDigits),
+    LastDigits = str_extract(Extracted, LastDigits),
+    ZerosDF = str_count(FirstDigits, '0'),
+    ZerosLD = str_count(LastDigits, '0')) |>
+  semi_join(T1) |>
+  filter(ZerosDF < 2 & ZerosLD < 4) |>
+  summarize(`Vehicle Numbers` = paste(Extracted, collapse = ","), .by = Index)
+
+# Merge transformed data back to original T2 and filter out NA values
+T2 |>
+  left_join(Transformed, by = "Index") |>
+  filter(!is.na(data))
