@@ -1,0 +1,22 @@
+library(tidyverse)
+library(readxl)
+
+
+filename <- 'CH-020 Transform Higherarchey format.xlsx'
+
+df <- read_xlsx(filename,range = "B2:C18",col_types = c("text","text")) 
+Expected <- read_xlsx(filename,range = "E2:H10")
+
+df
+
+Step <- df |>
+  arrange(Code) |>
+  mutate(Digits = nchar(Code)) |>
+  pivot_wider(id_cols = Code,names_from = Digits,names_prefix = "Lvel ",values_from = Description) 
+
+Answer <- Step |>
+  fill(everything(),.direction = "down") |>
+  filter(nchar(Code) == 3)
+
+Answer |>
+ flextable::flextable()
