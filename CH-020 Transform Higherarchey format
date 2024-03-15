@@ -1,3 +1,6 @@
+#Link to challange
+#https://www.linkedin.com/posts/omid-motamedisedeh-74aba166_excelchallenge-powerquerychllenge-excel-activity-7173075223699812352-N8wT?utm_source=share&utm_medium=member_desktop
+
 library(tidyverse)
 library(readxl)
 
