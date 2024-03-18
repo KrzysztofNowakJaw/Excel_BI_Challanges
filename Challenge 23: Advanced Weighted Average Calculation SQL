@@ -1,0 +1,31 @@
+#Link to challange
+#https://www.linkedin.com/posts/omid-motamedisedeh-74aba166_excelchallenge-powerquerychllenge-excel-activity-7175249548129312769-wF_s?utm_source=share&utm_medium=member_desktop
+
+WITH W AS (
+    -- Subquery to unpivot columns A, B, and C from T2 into rows
+    SELECT month, category, value
+    FROM (
+        SELECT month, 'A' AS category, A AS value FROM T2
+        UNION ALL
+        SELECT month, 'B' AS category, B AS value FROM T2
+        UNION ALL
+        SELECT month, 'C' AS category, C AS value FROM T2
+    ) AS crosstab_result
+),
+Calc AS (
+    -- Subquery to calculate average weight per machine_code and month from T1
+    SELECT 
+        machine_code,
+        T1.month,
+        AVG(weight) AS AV
+    FROM T1
+    GROUP BY 1, 2
+)
+-- Main query to calculate the weighted average of weight in Kg/Meter
+SELECT
+    Calc.month,
+    ROUND(SUM(AV * value) / SUM(value), 2) AS AVG_weight_Kg_Meter
+FROM Calc 
+INNER JOIN W ON W.month = Calc.month AND W.category = Calc.machine_code
+GROUP BY 1
+ORDER BY 1;
