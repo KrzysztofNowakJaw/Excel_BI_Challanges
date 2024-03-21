@@ -1,0 +1,17 @@
+#Link to challange
+#https://www.linkedin.com/posts/excelbi_excel-challenge-problem-activity-7176427310550573056-u5IQ?utm_source=share&utm_medium=member_desktop
+
+WITH Base AS (
+    SELECT 
+        row_number() OVER () AS RN,
+        data,
+        (REGEXP_MATCHES(data, '[[:alpha:]]+|\d+', 'g'))[1] AS Details
+    FROM EBI477
+)
+
+SELECT 
+    RN,
+    STRING_AGG(Details, ',')
+FROM Base
+GROUP BY RN
+ORDER BY RN;
