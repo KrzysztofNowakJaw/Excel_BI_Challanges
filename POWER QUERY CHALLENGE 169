@@ -1,0 +1,22 @@
+#Link to challange
+#https://www.linkedin.com/posts/excelbi_challenge-powerquerychallenge-daxchallenge-activity-7179688805430398976-XrX3?utm_source=share&utm_medium=member_desktop
+
+library(tidyverse)
+library(readxl)
+
+filename <- "PQ_Challenge_169.xlsx"
+
+df <- read_xlsx(filename, range = "C1:D8")
+
+FindMatches <- function(x) {
+  pattern <- "\\b[A-Z]+\\d+(\\d+|[A-Z])+\\b"
+  Extract <- unlist(str_extract_all(x, pattern))
+  if (length(Extract) == 0) {
+    NA
+  } else {
+    paste(Extract, collapse = ",")
+  }
+}
+
+df |>
+  mutate(MyAnswer = map_chr(String, FindMatches))
