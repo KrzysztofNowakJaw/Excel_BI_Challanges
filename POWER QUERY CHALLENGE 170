@@ -1,0 +1,37 @@
+# Link to challange
+# https://www.linkedin.com/posts/excelbi_challenge-powerquerychallenge-daxchallenge-activity-7180051191526002688-0CgR?utm_source=share&utm_medium=member_desktop
+
+library(tidyverse)
+library(readxl)
+
+filename <- "PQ_Challenge_170.xlsx"
+
+df <- read_xlsx(filename, range = "A1:C92")
+
+Categorized <- df |>
+  mutate(
+    DayType =
+      case_when(
+        wday(Date, week_start = 7) >= 2 & wday(Date, week_start = 7) < 7 ~ "Weekday",
+        TRUE ~ "Weekend"
+      )
+  )
+
+Totals <- Categorized |>
+  summarise(TotalSales = sum(Sale), .by = DayType)
+
+ItemsLabel <- Categorized |>
+  summarise(TotalSales = sum(Sale), .by = c(DayType, Item)) |>
+  group_by(DayType) |>
+  mutate(Rank = dense_rank(desc(TotalSales))) |>
+  filter(Rank == min(Rank) | Rank == max(Rank)) |>
+  mutate(Label = if_else(Rank == 1, "Highest Selling Item", "Lowest Selling Item")) |>
+  ungroup() |>
+  summarise(Answer = paste(Item, collapse = ","), .by = c(DayType, Label)) |>
+  pivot_wider(id_cols = DayType, names_from = Label, values_from = Answer)
+
+Answer <- Totals |>
+  inner_join(ItemsLabel)
+
+Answer 
+
