@@ -1,0 +1,47 @@
+#Link to challange
+# https://www.linkedin.com/posts/excelbi_d90e62-bc47d4-excel-activity-7180775963046068224-9_Vv?utm_source=share&utm_medium=member_desktop
+
+# Load necessary libraries
+library(tidyverse)
+library(readxl)
+
+# Define the filename of the Excel file
+filename <- "Excel_Challenge_425 - Hex Color Blending.xlsx"
+
+# Read data from Excel file and clean column names
+df <- read_xlsx(filename, range = "A1:B9") |> janitor::clean_names()
+Expected <- read_xlsx(filename, range = "C1:C9") |> janitor::clean_names()
+
+# Perform data manipulation and calculations
+Answer <- df |>
+  # Add an index column before 'color1'
+  mutate(Index = row_number(), .before = "color1") |>
+  # Separate columns with multiple colors into long format
+  separate_longer_delim(cols = contains("color"), delim = ",") |>
+  # Trim and convert color values to numeric
+  mutate(
+    across(contains("color"), ~ trimws(.)),
+    across(contains("color"), ~ as.numeric(.))
+  ) |>
+  rowwise() |>
+  # Calculate the average of color values and convert to hexadecimal
+  mutate(
+    Average = sum(across(contains("color")) / 2),
+    Average = ceiling(Average),
+    Answer = toupper(as.hexmode(as.numeric(Average))),
+    Answer = ifelse(nchar(Answer) == 1,
+                     paste("0", as.character(Answer), sep = ""),
+                     as.character(Answer)
+    )
+  ) |>
+  ungroup() |>
+  # Combine hexadecimal values and format as a single string
+  summarise(Answer = paste(Answer, collapse = ""), .by = "Index") |>
+  mutate(Answer = paste0("#", Answer), .keep = 'used')
+
+# Compare the calculated answer with the expected answer
+Expected |>
+  bind_cols(Answer) |>
+  mutate(Test = Answer == answer_expected)
+
+
