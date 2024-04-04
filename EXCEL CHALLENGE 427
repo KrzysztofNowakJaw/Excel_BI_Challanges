@@ -1,0 +1,31 @@
+#link to challange
+#https://www.linkedin.com/posts/excelbi_excel-challenge-problem-activity-7181500742896115712-C75i?utm_source=share&utm_medium=member_desktop
+
+
+
+library(tidyverse)
+library(readxl)
+
+filename <- "Excel_Challenge_427 - Double Accumulative Cipher.xlsx"
+
+df <- read_xlsx(filename) |> janitor::clean_names()
+
+FindPosition <- function(A) {
+  which(letters == A)
+}
+
+DoubleAccumulateCipher <- function(x) {
+  Split <- str_split(x, "")[[1]]
+  Positions <- map_dbl(Split, FindPosition) - 1
+  FirstCumulative <- cumsum(Positions) %% 26
+  FinalPositions <- (cumsum(FirstCumulative) %% 26) + 1
+  Answer <- paste(letters[FinalPositions], collapse = "")
+}
+
+Answer <- df |>
+  mutate(
+    MyAnswer = map_chr(plain_text, DoubleAccumulateCipher),
+    test = MyAnswer == answer_expected
+  )
+
+Answer
