@@ -1,0 +1,28 @@
+#Link to challage :
+https://www.linkedin.com/posts/excelbi_challenge-powerquerychallenge-daxchallenge-activity-7182587900008488960-NtYQ?utm_source=share&utm_medium=member_desktop
+
+library(tidyverse)
+library(readxl)
+
+
+filename <- "PQ_Challenge_172.xlsx"
+
+df <- read_xlsx(filename, range = "A1:F10") |> janitor::clean_names()
+
+CleanData <- df |>
+  mutate(Index = row_number(), .before = item) |>
+  unite("AgentsCombined", contains("agent"), sep = ",") |>
+  separate_longer_delim(cols = c(share_percent, AgentsCombined), delim = ",") |>
+  mutate(
+    share_percent = if_else(is.na(share_percent), "100", share_percent),
+    share_percent = as.numeric(trimws(share_percent)) / 100,
+    commission_percent = commission_percent / 100,
+    Comission = (amount * commission_percent) * share_percent
+  ) |>
+  filter(AgentsCombined != "NA") |>
+  summarise(Comission = sum(Comission), .by = AgentsCombined)
+
+bind_rows(CleanData, data.frame(
+  AgentsCombined = "Total",
+  Comission = sum(CleanData$Comission)
+))
