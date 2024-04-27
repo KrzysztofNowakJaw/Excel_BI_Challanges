@@ -22,8 +22,7 @@ RowWiseSummary <- df |>
 
 Ranks <- RowWiseSummary |>
   summarise(Mean = mean(Total_Marks),.by = Name) |>
-  mutate(Rank = dense_rank(desc(Mean))) |>
-  gt::
+  mutate(Rank = dense_rank(desc(Mean))) 
 
 Answer <- RowWiseSummary |>
   left_join(Ranks,by = "Name") |>
