@@ -1,3 +1,8 @@
+-- Link to challange
+-- POWER QUERY CHALLENGE 188
+-- https://www.linkedin.com/posts/excelbi_challenge-powerquerychallenge-daxchallenge-activity-7202881638760955904-dSDC?utm_source=share&utm_medium=member_desktop
+
+
 WITH F AS (
     SELECT
         ROW_NUMBER() OVER() AS Idx,
