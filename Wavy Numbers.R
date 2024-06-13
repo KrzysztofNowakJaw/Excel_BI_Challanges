@@ -14,7 +14,7 @@ FindWavy <- function(x) {
       Difference = Split - lead(Split),
       Difference = ifelse(is.na(Difference), Split - lag(Split), Difference)
     )
-
+  n <- 2
   v <- Diffs$Index
 
   Evens <- v[seq_along(v) %% n == 0]
