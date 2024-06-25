@@ -1,0 +1,62 @@
+library(tidyr)
+library(dplyr)
+library(stringr)
+library(purrr)
+
+# Definiowanie funkcji do przetwarzania pojedynczej kolumny
+process_column <- function(column) {
+  Sample <- data.frame(column = column)
+  
+  Base <- Sample |>
+    separate_longer_delim(column, delim = ": ") |>
+    fill(everything(), .direction = "down") |>
+    rename(Data = 1) |>
+    filter(!str_detect(Data, "Q\\d+")) |>
+    separate_longer_delim(Data, delim = ":")
+  
+  Questions <- Base |>
+    filter(row_number() %% 2 == 1) |>
+    rename(Question = 1) |>
+    mutate(Index = row_number())
+  
+  Answers <- Base |>
+    filter(row_number() %% 2 == 0) |>
+    rename(Answer = 1) |>
+    mutate(Index = row_number())
+  
+  Result <- Questions |>
+    left_join(Answers,by = "Index") |>
+    select(-c(Question)) |>
+    pivot_wider(names_from = Index,values_from = Answer)
+  
+  return(Result)
+}
+
+# Funkcja Transform do przetwarzania całej ramki danych
+Transform <- function(df) {
+  # Zastosowanie funkcji process_column do każdej kolumny w ramce danych df
+  results <- map(df, process_column)
+  
+  # Połączenie wszystkich wyników w jedną ramkę danych
+  final_result <- bind_rows(results)
+  
+  return(final_result)
+}
+
+df
+
+# Zastosowanie funkcji Transform na ramce danych df
+transformed_df <- Transform(df)
+
+transformed_df |>
+  select(1,2,3,7,5,8,4,6) |>
+  rename(
+    first_name = 1,
+    last_name = 2,
+    occupation_industry = 3,
+    audio_visual_accomodations = 4,
+    dietary_restrictions = 5,
+    first_time_attendee = 6,
+    hotel_accomodations = 7,
+    transportation = 8
+  )
