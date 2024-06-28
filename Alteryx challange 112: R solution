@@ -46,7 +46,6 @@ Transform <- function(df) {
   return(final_result)
 }
 
-df
 
 # Zastosowanie funkcji Transform na ramce danych df
 transformed_df <- Transform(df)
