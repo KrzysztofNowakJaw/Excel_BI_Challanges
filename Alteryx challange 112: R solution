@@ -1,3 +1,6 @@
+#Link to challange
+#https://community.alteryx.com/t5/Weekly-Challenges/Challenge-112-Organizing-Survey-Data/m-p/154577
+
 library(tidyr)
 library(dplyr)
 library(stringr)
