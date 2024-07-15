@@ -20,8 +20,8 @@ StructureValue <- function(x) {
 Combined <- map_dfr(df, StructureValue)
 
 Answer <- Combined |>
-  mutate(Date = str_replace_all(Date, "[[:punct:]]{2,}", "/\\")) |>
-  mutate(Date = as.Date(Date, format = "%m/%d/%y")) |>
+  mutate(Date = str_replace_all(Date, "[[:punct:]]{2,}", "/\\"),
+  Date = as.Date(Date, format = "%m/%d/%y")) |>
   arrange(`Part No.`, Date)
 
 Answer
