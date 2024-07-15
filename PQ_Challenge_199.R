@@ -6,8 +6,6 @@ library(readxl)
 
 filename <- "PQ_Challenge_199.xlsx"
 
-x <- "part no 978 to be sent on 12/28/23 and 11/2/23"
-
 df <- read_xlsx(filename, range = "A1:A5")
 
 StructureValue <- function(x) {
