@@ -1,3 +1,8 @@
+#Link to challange
+#https://www.linkedin.com/posts/omid-motamedisedeh-74aba166_excelchallenge-powerquerychallenge-excel-activity-7221620092386566144-5BYS?utm_source=share&utm_medium=member_desktop
+
+#R solution
+
 library(tidyverse)
 library(readxl)
 
@@ -16,6 +21,7 @@ Answer
 
 all.equal(Answer,Expected)
 
+#SQL solution
 
 # WITH Differences AS (
 #   SELECT 
