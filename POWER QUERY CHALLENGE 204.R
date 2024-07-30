@@ -1,3 +1,6 @@
+#Link to challange
+#https://www.linkedin.com/posts/excelbi_challenge-powerquerychallenge-daxchallenge-activity-7223175352724934657-ODc1?utm_source=share&utm_medium=member_desktop
+
 library(tidyverse)
 library(readxl)
 
