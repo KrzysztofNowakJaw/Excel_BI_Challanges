@@ -1,3 +1,6 @@
+--Link to challange
+--https://www.linkedin.com/posts/crispo-mwangi-6ab49453_excelchallenge-crispexcel-challenge-activity-7225712063354945539-pYxt?utm_source=share&utm_medium=member_desktop
+
 WITH Indexed AS (
     SELECT 
         row_number() OVER() AS IDs,
