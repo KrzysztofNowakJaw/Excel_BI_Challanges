@@ -1,3 +1,6 @@
+--Link to challange
+--https://www.linkedin.com/posts/crispo-mwangi-6ab49453_excelchallenge-crispexcel-powerquery-activity-7228259213892808704-nVRV?utm_source=share&utm_medium=member_desktop
+
 WITH AllPrice AS (
     SELECT 
         price,
