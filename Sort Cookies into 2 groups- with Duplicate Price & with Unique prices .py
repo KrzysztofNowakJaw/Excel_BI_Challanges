@@ -25,8 +25,6 @@ Counted = df.groupby("price").count()
 Duplicated = Counted.loc[Counted.cookie > 1]
 Uniques = Counted.loc[Counted.cookie == 1]
 
-df.merge(Duplicated,how="inner",on="price")
-
 D = Duplicated.merge(df,how="inner",on="price")
 U = Uniques.merge(df,how="inner",on="price")
 
