@@ -1,3 +1,7 @@
+--Link to challange
+-- https://www.linkedin.com/posts/omid-motamedisedeh-74aba166_powerabrquery-excel-powerabrqueryabrtips-activity-7228505467411427329-qpDB?utm_source=share&utm_medium=member_desktop
+
+
 WITH Sums AS (
     SELECT 
         product,
