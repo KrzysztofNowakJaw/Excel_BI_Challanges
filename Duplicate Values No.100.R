@@ -10,8 +10,7 @@ Answer <- df |>
   summarise(Count = n(), .by = Product_ID) |>
   group_by(Product_ID) |>
   complete(Count = seq(from = 1, to = Count, by = 1)) |>
-  mutate(IsDup = n()) |>
-  mutate(
+  mutate(IsDup = n(),
     Result =
       ifelse(IsDup > 1,
         str_c(as.character(Product_ID), LETTERS[Count], sep = ""),
@@ -20,3 +19,4 @@ Answer <- df |>
   )
 
 data.table::data.table(Answer)
+
