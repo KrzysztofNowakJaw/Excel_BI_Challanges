@@ -13,16 +13,11 @@ grades_df <- data.frame(
 
 grades <- c("A+", "A", "A-", "B+", "B", "B-", "C+", "C", "C-", "D+", "D", "D-", "F")
 Seq <- 1:13
-grades_df$Grades <- factor(grades_df$Grades,levels = grades,labels = Seq)
-
-Transformed <- grades_df |>
-  mutate(GradesRank = ifelse(Grades != 13,Grades,NA)) |>
-  mutate(Rank = dense_rank(GradesRank)) |>
-  select(Rank)
+grades_df$GradesSeq <- factor(grades_df$Grades,levels = grades,labels = Seq)
 
 Answer <- grades_df |>
-  select(Name) |>
-  bind_cols(Transformed)
-  
-Answer
+  mutate(GradesSeq = ifelse(GradesSeq != 13,GradesSeq,NA),
+         Rank = dense_rank(GradesSeq)) |>
+  select(-c(GradesSeq))
 
+Answer
