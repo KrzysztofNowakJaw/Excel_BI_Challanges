@@ -38,11 +38,6 @@ INSERT INTO CompareRows (Date, Product, Sales) VALUES
 ('2024-10-01', 'B', 1);
 
 
-
-
-
-
-
 SELECT
     date,
     daily,
