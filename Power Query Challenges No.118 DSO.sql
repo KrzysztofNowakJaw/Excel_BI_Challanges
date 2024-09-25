@@ -1,5 +1,7 @@
+--Link to challage
+--https://www.linkedin.com/posts/omid-motamedisedeh-74aba166_powerabrquery-excel-powerabrqueryabrtips-activity-7244450548014350336-vHCD?utm_source=share&utm_medium=member_desktop
 WITH Cumulative AS (
-  -- Step 1: Left join CustomerTable with BalanceTable
+  
   SELECT 
     CT.Date, 
     CT.Customer, 
