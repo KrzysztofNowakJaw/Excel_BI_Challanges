@@ -16,7 +16,7 @@ Answer <- df |>
   mutate(CS = cumsum(Sales),
          Test = cumall(Balance >= CS)) |>
   ungroup() |>
-  mutate(Index = row_number(Test),.by = c(Customer,Test)) |>
+  mutate(Index = row_number(),.by = c(Customer,Test)) |>
   filter(Test == TRUE | Index == 1) |>
   group_by(Customer) |>
   mutate(DateDiff = as.numeric(abs(as.Date(Date)-BOAD)),
