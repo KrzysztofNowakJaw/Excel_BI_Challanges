@@ -1,0 +1,14 @@
+
+
+let
+    Source = Table.FromRecords({
+        [Dept = "A", Names = "Janice-8260"],
+        [Dept = "B", Names = "Stephen-9700, Daniel-7460, Vincent-3160"],
+        [Dept = "C", Names = "Cynthia-9330, Kyle-4850, Eric-2310, Douglas-1050"],
+        [Dept = "D", Names = "Steven-6160, Stephanie-5800"],
+        [Dept = "E", Names = "Scott-6600, Ruth-1440, Dylan-1020, Laura-7240"],
+        [Dept = "F", Names = "Sharon-4540, Sandra-8900"],
+        [Dept = "G", Names = "Roy-6370, Grace-7160, Joyce-9430"]
+    })
+in
+    Source
