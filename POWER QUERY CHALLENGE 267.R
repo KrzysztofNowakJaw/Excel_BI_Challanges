@@ -24,3 +24,28 @@ Answer <- df |>
 #compare with expected
 Answer$Test <- Answer$Running == expected$Amount
 Answer
+
+#While loop solution: 
+
+# Initialize Baza and Grupy
+Baza <- 10
+Grupy <- tibble()
+
+# Loop through Baza values
+while (Baza > 1) {
+  # Append new rows to Grupy
+  Grupy <- 
+    bind_rows(
+      Grupy,
+      tibble(Groups = rep(Baza, Baza))
+    )
+  # Decrement Baza
+  Baza <- Baza - 1
+}
+
+#rows without groups
+Difference <- nrow(df) - length(Groups)
+OneRowGroups <- seq(from = 11,to = 10 + Difference,by = 1)
+df$Group <- c(Groups,OneRowGroups)
+AnswerWhile <- df |>
+  mutate(Running = cumsum(Amount),.by = Group)
