@@ -1,3 +1,5 @@
+#Source
+#https://www.linkedin.com/posts/excelbi_challenge-powerquerychallenge-daxchallenge-activity-7303987854601265152-4pfX?utm_source=share&utm_medium=member_desktop&rcm=ACoAACOAYFUBiUaa9Y4mEwqoxo7zB0wNDVUrSg0
 library(tidyverse)
 
 #Numbers to replicate
