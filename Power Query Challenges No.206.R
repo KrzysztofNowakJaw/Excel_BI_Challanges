@@ -25,8 +25,8 @@ OddIndices <- which(Seq %% 2 != 0)
 Even <- paste(Split[EvenIndices],collapse = "")
 Odd <- paste(Split[OddIndices],collapse = "")
 
-#tibble(Odd = Odd,
- #      Even = Even)
+tibble(Odd = Odd,
+       Even = Even)
 }
 
 Answer <- map_df(Problem,EvenOdd)
