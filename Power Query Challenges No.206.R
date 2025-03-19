@@ -1,3 +1,6 @@
+#Challange
+#https://www.linkedin.com/posts/omidmot_powerabrquery-excel-powerabrqueryabrtips-activity-7308230809809784832-o3Ww?utm_source=share&utm_medium=member_desktop&rcm=ACoAACOAYFUBiUaa9Y4mEwqoxo7zB0wNDVUrSg0
+
 library(tidyverse)
 
 Problem <- c(
