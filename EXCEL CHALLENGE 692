@@ -1,0 +1,19 @@
+#Link to challange
+#https://www.linkedin.com/posts/excelbi_excel-challenge-problem-activity-7315946818889039872-YF83?utm_source=share&utm_medium=member_desktop&rcm=ACoAACOAYFUBiUaa9Y4mEwqoxo7zB0wNDVUrSg0
+
+let
+    Source = Excel.CurrentWorkbook(){[Name="Teams"]}[Content],
+    Index = Table.AddIndexColumn(Source, "Indeks", 1, 1, Int64.Type),
+    Reorder = Table.ReorderColumns(Index,{"Indeks", "Team 1", "Team 2", "Result"}),
+    Unpivot = Table.Unpivot(Reorder, {"Team 1", "Team 2"}, "Team", "Score"),
+    Split = Table.SplitColumn(Unpivot, "Result", Splitter.SplitTextByDelimiter("-", QuoteStyle.Csv), {"Result Team 1", "Result Team 2"}),
+    ResultColumn = Table.AddColumn(Split , "Result", each if Text.End([Team],1) = "1" = true then [Result Team 1] else [Result Team 2]),
+    Winners = Table.Group(ResultColumn, {"Indeks"}, {{"Winner", each List.Max([Result]), type number}}),
+    Joined = Table.Join(ResultColumn,{"Indeks"},Winners,{"Indeks"},JoinKind.Inner),
+    Wins = Table.SelectRows(Joined, each [Result] = [Winner]),
+    WinnedGames = Table.Group(Wins, {"Score"}, {{"Wins", each Table.RowCount(_), Int64.Type}}),
+    teamGames = Table.Group(Joined, {"Score"}, {{"Wins", each Table.RowCount(_), Int64.Type}}),
+    Answer = Table.Join(WinnedGames,{"Score","Wins"},teamGames,{"Score","Wins"},JoinKind.Inner)
+
+in
+ Answer
