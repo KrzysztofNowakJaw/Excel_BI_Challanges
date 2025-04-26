@@ -1,0 +1,31 @@
+#Link to challange
+#https://www.linkedin.com/posts/omidmot_powerabrquery-excel-powerabrqueryabrtips-activity-7321276764549218304-EII_?utm_source=share&utm_medium=member_desktop&rcm=ACoAACOAYFUBiUaa9Y4mEwqoxo7zB0wNDVUrSg0
+
+library(tidyverse)
+
+# Lista ID
+id_list <- c(
+  "MN-123-98-24",
+  "XMN-0-0-23-2",
+  "MN-B-10-12",
+  "NHJ-A-B-I23",
+  "I-XX-MN1"
+)
+
+df <- data.frame(ID = id_list)
+
+Divide_ID <- function(x) {
+  Split <- str_split(x, "")[[1]]
+
+  Position <- which(Split == "-")[2]
+
+  Result <- tibble(
+    ID1 = paste(Split[1:Position - 1], collapse = ""),
+    ID2 = paste(Split[-1:-Position], collapse = "")
+  )
+
+
+  return(Result)
+}
+
+map_df(df$ID, Divide_ID)
