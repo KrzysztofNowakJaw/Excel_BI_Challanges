@@ -1,5 +1,6 @@
 library(fs)
 library(tidyverse)
+library(readxl)
 
 File_To_Move <- fs::dir_info(path = '/Users/krzysztofnowak/Downloads') |> 
   arrange(desc(modification_time)) |>
@@ -8,7 +9,9 @@ File_To_Move <- fs::dir_info(path = '/Users/krzysztofnowak/Downloads') |>
   select(path)
 
 
-
 fs::file_move(File_To_Move[[1]],getwd())
 
 
+File_name <- str_extract(File_To_Move,'(?<=Downloads\\/).+.xlsx$')
+
+read_xlsx(File_name)
