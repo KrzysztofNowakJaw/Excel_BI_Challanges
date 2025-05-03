@@ -1,3 +1,5 @@
+#https://docs.google.com/spreadsheets/d/1yvYLH_4QWgk_rBvDp6kXaofacQ1IjxrW/edit?gid=1841164270#gid=1841164270
+
 library(tidyverse)
 library(readxl)
 
@@ -9,5 +11,3 @@ Answer <- df |>
     Price = cumsum(Price),.by = Product)
 
 
-
-Answer
