@@ -1,0 +1,20 @@
+https://www.linkedin.com/posts/excelbi_challenge-powerquerychallenge-daxchallenge-activity-7355092528007720960-pMWv?utm_source=share&utm_medium=member_desktop&rcm=ACoAACOAYFUBiUaa9Y4mEwqoxo7zB0wNDVUrSg0
+
+let
+  Source = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText("Xc/JCoMwEAbgVxk8JzBZq7m1qdcWukERDyI5Vku6gG9fMS6xc8rhy/z/FEVi28ezajrYGri7yhuOTBE4ua9rPs4ARyS2fb0NS5HMQseCTyKLxCYWchRcYFKSJXNHoVsy7fF8MSCwf47j81t+uOZUMrX6Z4cYWBWZitK5KP2rwaQi9VBU6dW6fTg9cB94r1HBsJALCRNII6CEhnhCusAsKcsf", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type nullable text) meta [Serialized.Text = true]) in type table [Data = _t]),
+  LowerCase = Table.TransformColumns(Source, {{"Data", each Text.Lower(_), type nullable text}}),
+  RemovePrefix = Table.ReplaceValue(LowerCase, "company ", "", Replacer.ReplaceText, {"Data"}),
+  CompanyColumn = Table.AddColumn(RemovePrefix, "Company", each Text.Start([Data], 1), type text),
+  Split = Table.ExpandListColumn(Table.TransformColumns(CompanyColumn, {{"Data", Splitter.SplitTextByAnyDelimiter({":"," ",",",": ","-"}), let itemType = (type nullable text) meta [Serialized.Text = true] in type {itemType}}}), "Data"),
+  FilterNulls = Table.SelectRows(Split, each ([Data] <> "")),
+  Index = Table.AddIndexColumn(FilterNulls, "Index", 1, 1, Int64.Type),
+  Modulo = Table.AddColumn(Index, "Modulo", each if Number.IsOdd([Index]) then [Data] else null,type number),
+  FillUp = Table.FillUp(Modulo, {"Modulo"}),
+  InScope = Table.SelectRows(FillUp, each ([Data] = "revenue" or [Data]= "cost")),
+  MarkText = Table.AddColumn(InScope, "Niestandardowe", each Text.Select([Modulo],{"a".."z"})),
+  #"Przefiltrowano wiersze" = Table.SelectRows(MarkText, each ([Niestandardowe] = "")),
+  #"Zmieniono typ kolumny" = Table.TransformColumnTypes(#"Przefiltrowano wiersze", {{"Modulo", Int64.Type}})
+
+
+in
+#"Zmieniono typ kolumny"
