@@ -12,4 +12,4 @@ Answer <- df |>
   pivot_wider(id_cols = Name,names_from = A,values_from = B) |>
   separate_longer_delim(Department,delim = ' | ')
 
-Answer
+
