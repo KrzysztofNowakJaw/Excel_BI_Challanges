@@ -1,0 +1,8 @@
+# Ignoruj pliki Excela
+*.xls
+*.xlsx
+*.xlsm
+*.xlsb
+*.xltx
+*.xltm
+*.csv
