@@ -1,15 +1,19 @@
-# Link to challange
-#https://www.linkedin.com/posts/omidmot_powerabrquery-excel-powerabrqueryabrtips-activity-7298083961073741824-89-a?utm_source=share&utm_medium=member_desktop&rcm=ACoAACOAYFUBiUaa9Y4mEwqoxo7zB0wNDVUrSg0
-library(tidyverse)
-library(readxl)
+#challange: https://docs.google.com/spreadsheets/d/1QBOkpqvc_JBox78nx-AGu_azN_2Za_fv/edit?gid=760265087#gid=760265087
+df <- read_xlsx(File_name,range = "B2:E6")
+Expected <- read_xlsx(File_name,range = "I2:K13") 
+
+CleanDate <- "(?<=.{11})\\d{1,}$"
+names(df) <- sapply(names(df),function(x) {str_remove(x,CleanDate)})
 
 Answer <- df |>
-  mutate(Index = row_number()) |>
-  mutate(IsNeg = consecutive_id(Quantity < 0),.by = Product) |>
-  arrange(Product,IsNeg,desc(Date)) |>
-  mutate(QS= cumsum(abs(Quantity)),.by = c(Product,IsNeg)) |>
-  slice_max(order_by = QS,n = 1,by = c(Product,IsNeg)) |>
-  mutate(QS = case_when(lead(Quantity) < 0 ~ QS - lead(QS),.default = QS),.by = Product) |>
-  filter(QS > 0 & Quantity > 0) |>
-  arrange(Index) |>
-  select(Date,Product,QS)
+  mutate(Index = row_number(),.before = names(df)[1]) |>
+  pivot_longer(cols = 2:5) |>
+  separate_wider_delim(cols = value,delim = '-',names = c("A","B")) |>
+  mutate(name = as.Date(name,tryFormats = c("%d/%b/%Y"))) |>
+  filter(!is.na(B)) |>
+  select(2:4)
+
+names(Answer) <- names(Expected)
+
+Answer
+
