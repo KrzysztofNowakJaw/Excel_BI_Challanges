@@ -1,8 +1,7 @@
-# Ignoruj pliki Excela
+# Ignoruj wszystkie pliki Excela
 *.xls
 *.xlsx
 *.xlsm
 *.xlsb
 *.xltx
 *.xltm
-*.csv
