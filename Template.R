@@ -1,4 +1,4 @@
-#Downoad recent excel file to project folder
+#Download recent excel file to project folder
 
 library(fs)
 library(tidyverse)
@@ -17,3 +17,6 @@ fs::file_move(File_To_Move[[1]],getwd())
 File_name <- str_extract(File_To_Move,'(?<=Downloads\\/).+.xlsx$')
 
 read_xlsx(File_name)
+
+# Remove the file after reading
+fs::file_delete(File_name)
