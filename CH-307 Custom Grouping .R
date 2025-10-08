@@ -1,3 +1,4 @@
+#https://www.linkedin.com/posts/omidmot_exclude-powerabrquery-excel-activity-7381433168786231297-S_IY?utm_source=share&utm_medium=member_desktop&rcm=ACoAACOAYFUBiUaa9Y4mEwqoxo7zB0wNDVUrSg0
 library(tidyverse)
 
 df <- read_xlsx(File_name,range = "B2:C19")
