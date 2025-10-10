@@ -24,13 +24,12 @@ print(df)
 
 Cleaned <- df |>
   tidytext::unnest_regex(
-    input = Strings,output = Split,pattern = "[^\\d+]",drop = FALSE) |>
-  mutate(Index = row_number(),
-         Nrows = n()
-         ,.by = Strings) |>
-  filter(Index > 1 & Index < Nrows) 
+    input = Strings,
+    output = Split,
+    pattern = "[^\\d+]",
+    drop = FALSE
+  ) |>
+  mutate(Index = row_number(), Nrows = n(), .by = Strings) |>
+  filter(Index > 1 & Index < Nrows)
 
 sum(as.numeric(Cleaned$Split))
-
-
-

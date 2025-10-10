@@ -29,9 +29,10 @@ Answer <- df |>
     Average = sum(across(contains("color")) / 2),
     Average = ceiling(Average),
     Answer = toupper(as.hexmode(as.numeric(Average))),
-    Answer = ifelse(nchar(Answer) == 1,
-                     paste("0", as.character(Answer), sep = ""),
-                     as.character(Answer)
+    Answer = ifelse(
+      nchar(Answer) == 1,
+      paste("0", as.character(Answer), sep = ""),
+      as.character(Answer)
     )
   ) |>
   ungroup() |>
@@ -43,5 +44,3 @@ Answer <- df |>
 Expected |>
   bind_cols(Answer) |>
   mutate(Test = Answer == answer_expected)
-
-

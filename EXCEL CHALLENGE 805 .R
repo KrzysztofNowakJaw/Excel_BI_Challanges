@@ -3,7 +3,10 @@
 library(tidyverse)
 library(readxl)
 
-df <- read_xlsx("Excel_Challenge_805 - Vowels in Increasing or Decreasing Order.xlsx",range = "A2:B16")
+df <- read_xlsx(
+  "Excel_Challenge_805 - Vowels in Increasing or Decreasing Order.xlsx",
+  range = "A2:B16"
+)
 
 VowelsOrder <- function(word) {
   vowels <- c("a", "e", "i", "o", "u")
@@ -19,8 +22,8 @@ VowelsOrder <- function(word) {
 }
 
 df |>
-  filter( map_int(.x = Rivers, .f = VowelsOrder) == 1) |>
+  filter(map_int(.x = Rivers, .f = VowelsOrder) == 1) |>
   group_by(Group) |>
-  mutate(Index = paste("River",as.character(row_number()))) |>
-  pivot_wider(id_cols = Group,names_from = Index,values_from = Rivers) |>
+  mutate(Index = paste("River", as.character(row_number()))) |>
+  pivot_wider(id_cols = Group, names_from = Index, values_from = Rivers) |>
   arrange(Group)

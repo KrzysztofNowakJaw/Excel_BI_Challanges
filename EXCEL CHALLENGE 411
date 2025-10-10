@@ -6,23 +6,26 @@ library(readxl)
 
 filename <- 'Excel_Challenge_411 - Split String at other than Space.xlsx'
 
-df <- read_xlsx(filename,range = "A1:A10") 
+df <- read_xlsx(filename, range = "A1:A10")
 
 pattern <- '(".+")|[^\\s]+'
 
 Answer <- df |>
   group_by(Sentences) |>
-  mutate(Components = str_extract_all(Sentences,pattern)) |>
+  mutate(Components = str_extract_all(Sentences, pattern)) |>
   unnest(Components) |>
-  separate_longer_delim(cols = Components,delim = '"') |>
-  filter(str_detect(Components,'[[:alpha:]]')) |>
-  mutate(Index = row_number(),
-         Components = str_remove_all(Components,'"')) |>
-  pivot_wider(id_cols = Sentences,names_from = Index,
-              values_from = Components,names_prefix = "Word") |>
+  separate_longer_delim(cols = Components, delim = '"') |>
+  filter(str_detect(Components, '[[:alpha:]]')) |>
+  mutate(Index = row_number(), Components = str_remove_all(Components, '"')) |>
+  pivot_wider(
+    id_cols = Sentences,
+    names_from = Index,
+    values_from = Components,
+    names_prefix = "Word"
+  ) |>
   ungroup()
 
 Answer |>
-    gt::gt()
+  gt::gt()
 
 Answer

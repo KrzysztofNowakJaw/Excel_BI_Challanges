@@ -5,7 +5,7 @@
 
 # Load required libraries
 library(tidyverse)
-library(readxl) 
+library(readxl)
 
 # Read data from Excel file
 df <- read_xlsx("Highest Marks Names Subjects.xlsx", range = "A1:E10")

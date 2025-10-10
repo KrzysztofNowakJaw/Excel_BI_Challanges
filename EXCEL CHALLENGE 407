@@ -7,31 +7,46 @@ library(tidytext)
 
 filename <- "Excel_Challenge_407 - Mirror Cipher.xlsx"
 
-df <- read_xlsx(filename,range = "A1:B10") |> janitor::clean_names() 
-Expected <- read_xlsx(filename,range = "A1:C10") |> janitor::clean_names() |> select(plain_text,answer_expected)
+df <- read_xlsx(filename, range = "A1:B10") |> janitor::clean_names()
+Expected <- read_xlsx(filename, range = "A1:C10") |>
+  janitor::clean_names() |>
+  select(plain_text, answer_expected)
 
 Answer <- df |>
-  group_by(plain_text,shift) |>
-  unnest_tokens(input = plain_text,output = "Separated",token = "words",to_lower = F,drop = F) |>
+  group_by(plain_text, shift) |>
+  unnest_tokens(
+    input = plain_text,
+    output = "Separated",
+    token = "words",
+    to_lower = F,
+    drop = F
+  ) |>
   mutate(Index = row_number()) |>
   arrange(desc(Index)) |>
   rowwise() |>
-  mutate(ReversedAlphbets = list(rev(str_split(Separated,"")[[1]])),
-         FindPositionInAlphabet = list(as.numeric(match(unlist(ReversedAlphbets ),letters)) + shift)) |>
-  unnest_longer(col = c("FindPositionInAlphabet","ReversedAlphbets")) |>
-  mutate(ShiftedLetter = 
-           case_when(
-             FindPositionInAlphabet > length(letters) ~ FindPositionInAlphabet - length(letters),
-             .default = FindPositionInAlphabet)) |>
+  mutate(
+    ReversedAlphbets = list(rev(str_split(Separated, "")[[1]])),
+    FindPositionInAlphabet = list(
+      as.numeric(match(unlist(ReversedAlphbets), letters)) + shift
+    )
+  ) |>
+  unnest_longer(col = c("FindPositionInAlphabet", "ReversedAlphbets")) |>
+  mutate(
+    ShiftedLetter = case_when(
+      FindPositionInAlphabet > length(letters) ~
+        FindPositionInAlphabet - length(letters),
+      .default = FindPositionInAlphabet
+    )
+  ) |>
   rowwise() |>
   mutate(NL = letters[ShiftedLetter][1]) |>
-  group_by(plain_text,Index) |>
-  mutate(Words = paste(NL,collapse = ""),.keep = "used") |>
-  select(plain_text,Words) |>
+  group_by(plain_text, Index) |>
+  mutate(Words = paste(NL, collapse = ""), .keep = "used") |>
+  select(plain_text, Words) |>
   ungroup() |>
   unique() |>
-  summarise(Answer = paste(Words,collapse = " "),.by = "plain_text")
+  summarise(Answer = paste(Words, collapse = " "), .by = "plain_text")
 
 Expected |>
-  left_join(Answer,by = c("plain_text")) |>
+  left_join(Answer, by = c("plain_text")) |>
   mutate(test = answer_expected == Answer)

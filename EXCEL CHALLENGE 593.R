@@ -12,14 +12,18 @@ SurroundedBrackets <- "\\(.+\\)"
 str_view(df$Strings, PatternNegation)
 
 Transposed <- df |>
-  unnest_regex(input = Strings, output = Split, pattern = PatternNegation, drop = FALSE) |>
+  unnest_regex(
+    input = Strings,
+    output = Split,
+    pattern = PatternNegation,
+    drop = FALSE
+  ) |>
   mutate(
-    Split =
-      case_when(
-        str_detect(Split, SurroundedBrackets) ~
-          paste0("-", str_remove_all(Split, "[\\(\\)]")),
-        .default = Split
-      )
+    Split = case_when(
+      str_detect(Split, SurroundedBrackets) ~
+        paste0("-", str_remove_all(Split, "[\\(\\)]")),
+      .default = Split
+    )
   ) |>
   mutate(Index = row_number(), .by = Strings) |>
   pivot_wider(id_cols = Strings, names_from = Index, values_from = Split)

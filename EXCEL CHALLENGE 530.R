@@ -6,7 +6,11 @@ library(readxl)
 library(janitor)
 
 
-df <- read_xlsx("Excel_Challenge_530 - Dates for Max Sales.xlsx", range = c("A2:I11")) |> clean_names()
+df <- read_xlsx(
+  "Excel_Challenge_530 - Dates for Max Sales.xlsx",
+  range = c("A2:I11")
+) |>
+  clean_names()
 
 Answer <- df |>
   rowwise() |>
@@ -24,6 +28,9 @@ Answer <- df |>
   rowwise() |>
   mutate(Answer = Periods[Index]) |>
   ungroup() |>
-  summarise(Answer = paste(as.character(Answer), collapse = ","), .by = c(name, MaxVal))
+  summarise(
+    Answer = paste(as.character(Answer), collapse = ","),
+    .by = c(name, MaxVal)
+  )
 
-Answer 
+Answer

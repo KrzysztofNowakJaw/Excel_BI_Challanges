@@ -2,18 +2,17 @@
 
 library(tidyverse)
 
-df <- read_xlsx(File_name,range = "A2:B6")
+df <- read_xlsx(File_name, range = "A2:B6")
 
 df |>
-  mutate(Band = str_extract_all(Band,pattern = '\\d+-\\d+')) |>
+  mutate(Band = str_extract_all(Band, pattern = '\\d+-\\d+')) |>
   unnest(cols = Band) |>
-  separate_longer_delim(Band,delim = ", ") |>
-  separate_wider_delim(Band,delim = "-",names = c("Min","Max")) |>
+  separate_longer_delim(Band, delim = ", ") |>
+  separate_wider_delim(Band, delim = "-", names = c("Min", "Max")) |>
   mutate(across(2:3, ~ as.numeric(.))) |>
   group_by(Index = row_number()) |>
-  complete(Min = seq(from = min(Min),to = max(Max),by = 1)) |>
+  complete(Min = seq(from = min(Min), to = max(Max), by = 1)) |>
   rename(Answer = Min) |>
-  ungroup() |> 
+  ungroup() |>
   fill(Product) |>
-  select(Product,Answer)
-
+  select(Product, Answer)

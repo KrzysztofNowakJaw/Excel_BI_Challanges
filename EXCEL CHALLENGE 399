@@ -31,4 +31,3 @@ Answer <- df |>
 
 # Display the final result tibble
 Answer
-

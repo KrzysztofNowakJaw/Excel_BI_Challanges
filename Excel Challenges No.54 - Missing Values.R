@@ -12,11 +12,9 @@ Expected <- read_xlsx(filename, range = "H2:J38") |> janitor::clean_names()
 
 
 Answer <- df |>
-  mutate(Year = year(date),
-         Month = month(date)) |>
+  mutate(Year = year(date), Month = month(date)) |>
   group_by(project, Year) |>
-  complete(Month = seq(from = min(Month),
-                       to = max(Month))) |>
+  complete(Month = seq(from = min(Month), to = max(Month))) |>
   arrange(project, Year, Month) |>
   fill(actual_progress, .direction = "down") |>
   mutate(
