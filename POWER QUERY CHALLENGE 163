@@ -22,7 +22,8 @@ T2 <- T2 |>
 # Transform the data based on regex patterns
 Transformed <- T2 |>
   mutate(
-    Extracted = str_extract_all(data, Pattern)) |>
+    Extracted = str_extract_all(data, Pattern)
+  ) |>
   unnest_longer(Extracted) |>
   select(-c("data")) |>
   mutate(
@@ -31,7 +32,8 @@ Transformed <- T2 |>
     FirstDigits = str_extract(Extracted, FirstDigits),
     LastDigits = str_extract(Extracted, LastDigits),
     ZerosDF = str_count(FirstDigits, '0'),
-    ZerosLD = str_count(LastDigits, '0')) |>
+    ZerosLD = str_count(LastDigits, '0')
+  ) |>
   semi_join(T1) |>
   filter(ZerosDF < 2 & ZerosLD < 4) |>
   summarize(`Vehicle Numbers` = paste(Extracted, collapse = ","), .by = Index)

@@ -4,23 +4,29 @@
 library(tidyverse)
 library(readxl)
 
-df <- read_xlsx(File_name,range = "A1:B18")
+df <- read_xlsx(File_name, range = "A1:B18")
 
 Answer <- df |>
-  mutate(Customer = case_when(!str_detect(Data2,'\\d+') ~ Data2,default = NULL),
-         Data1 = str_remove(Data1,'\\d+$')) |>
-  fill(Customer,.direction = "down") |>
-  filter(Data1 != 'Customer') |>
-  summarize(Values = sum(as.numeric(Data2)),.by = c(Customer,Data1)) |>
-  pivot_wider(id_cols = Customer,names_from = Data1,values_from = Values) |>
-  mutate(across(where(is.numeric),\(x) ifelse(is.na(x),0,x)),
-         Total = Quantity * (Price - Discount - Tax)) |>
-  select(Customer,Total) |>
-  janitor::adorn_totals()
+       mutate(
+              Customer = case_when(
+                     !str_detect(Data2, '\\d+') ~ Data2,
+                     default = NULL
+              ),
+              Data1 = str_remove(Data1, '\\d+$')
+       ) |>
+       fill(Customer, .direction = "down") |>
+       filter(Data1 != 'Customer') |>
+       summarize(Values = sum(as.numeric(Data2)), .by = c(Customer, Data1)) |>
+       pivot_wider(
+              id_cols = Customer,
+              names_from = Data1,
+              values_from = Values
+       ) |>
+       mutate(
+              across(where(is.numeric), \(x) ifelse(is.na(x), 0, x)),
+              Total = Quantity * (Price - Discount - Tax)
+       ) |>
+       select(Customer, Total) |>
+       janitor::adorn_totals()
 
 Answer
-
-
-
-
-

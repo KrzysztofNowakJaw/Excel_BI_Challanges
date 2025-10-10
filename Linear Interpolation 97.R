@@ -13,8 +13,11 @@ Completed <- df |>
 ToBeInterpolated <- Completed |>
   slice(2:(nrow(Completed) - 1))
 
-Interpolate <- as.data.frame(lapply(ToBeInterpolated |> 
-                                      select(1:ncol(ToBeInterpolated)), zoo::na.approx))
+Interpolate <- as.data.frame(lapply(
+  ToBeInterpolated |>
+    select(1:ncol(ToBeInterpolated)),
+  zoo::na.approx
+))
 
 AllRows <- bind_rows(
   Completed |> head(1),
@@ -28,13 +31,13 @@ InterpolateMissingBorders <- function(x) {
   Differences <- diff(x[!is.na(x)])
   fillVal <- Differences[c(1, length(Differences))]
   x[NaIndex] <- fillVal
-  
+
   x <- case_when(
     row_number() == 1 ~ abs(x - lead(x)),
     row_number() == n() ~ x + lag(x),
     TRUE ~ x
   )
-  
+
   return(x)
 }
 
@@ -42,4 +45,3 @@ Answer <- AllRows |>
   mutate(across(2:ncol(AllRows), \(x) InterpolateMissingBorders(x)))
 
 Answer
-

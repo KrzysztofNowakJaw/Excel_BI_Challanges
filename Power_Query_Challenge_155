@@ -6,7 +6,7 @@ library(tidytext)
 
 filename <- "Power_Query_Challenge_155.xlsx"
 
-df <- read_xlsx(path = filename,range = "C1:D10") |> janitor::clean_names()
+df <- read_xlsx(path = filename, range = "C1:D10") |> janitor::clean_names()
 
 HoursPattern <- "(\\d{1,2}:\\d{1,2})"
 AllowedCharaters <- "\\d+|:+"
@@ -16,15 +16,17 @@ Answer <- df |>
   mutate(Index = row_number()) |>
   rowwise() |>
   mutate(
-    Cleaned = paste(unlist(unique(str_extract_all(string, HoursPattern)[[1]])),collapse = ",")
+    Cleaned = paste(
+      unlist(unique(str_extract_all(string, HoursPattern)[[1]])),
+      collapse = ","
+    )
   ) |>
   group_by(Index) |>
-  separate_longer_delim(cols = Cleaned,",") |>
-  filter(str_detect(Cleaned,TwentyFourHoursClock)) |>
-  mutate(Answer = paste(Cleaned,collapse = ", "),
-         test = Answer == expected_answer) |>
-  select(Answer,expected_answer,test) |>
+  separate_longer_delim(cols = Cleaned, ",") |>
+  filter(str_detect(Cleaned, TwentyFourHoursClock)) |>
+  mutate(
+    Answer = paste(Cleaned, collapse = ", "),
+    test = Answer == expected_answer
+  ) |>
+  select(Answer, expected_answer, test) |>
   unique()
-
-
-

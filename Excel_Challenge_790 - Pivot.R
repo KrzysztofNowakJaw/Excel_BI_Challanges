@@ -2,14 +2,15 @@
 library(tidyverse)
 library(readxl)
 
-df <- read_xlsx('/Users/krzysztofnowak/Desktop/ExcelBi/Excel_BI_Challanges/Excel_Challenge_790 - Pivot.xlsx',range = "A2:A12")
+df <- read_xlsx(
+  '/Users/krzysztofnowak/Desktop/ExcelBi/Excel_BI_Challanges/Excel_Challenge_790 - Pivot.xlsx',
+  range = "A2:A12"
+)
 
 Answer <- df |>
-  separate_wider_delim(cols = Data,delim = ': ',names = c('A','B')) |>
-  mutate(Name = case_when(A == 'Name' ~ B,.default = NA),.before = A) |>
-  fill(everything(),.direction = "down") |>
+  separate_wider_delim(cols = Data, delim = ': ', names = c('A', 'B')) |>
+  mutate(Name = case_when(A == 'Name' ~ B, .default = NA), .before = A) |>
+  fill(everything(), .direction = "down") |>
   filter(A != 'Name') |>
-  pivot_wider(id_cols = Name,names_from = A,values_from = B) |>
-  separate_longer_delim(Department,delim = ' | ')
-
-
+  pivot_wider(id_cols = Name, names_from = A, values_from = B) |>
+  separate_longer_delim(Department, delim = ' | ')

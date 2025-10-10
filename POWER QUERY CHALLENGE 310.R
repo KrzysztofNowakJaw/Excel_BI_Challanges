@@ -2,7 +2,7 @@ library(tidyverse)
 library(readxl)
 
 
-df <- read_xlsx(File_name,range = "A1:D13")
+df <- read_xlsx(File_name, range = "A1:D13")
 
 Answer <- df |>
   fill(everything(), .direction = "down") |>

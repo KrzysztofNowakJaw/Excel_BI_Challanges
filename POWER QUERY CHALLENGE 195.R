@@ -27,9 +27,11 @@ T2 |>
   left_join(CleanedT1) |>
   mutate(
     N = n_distinct(Stockist),
-    .by = Items, Stockist
+    .by = Items,
+    Stockist
   ) |>
-  mutate(across(3:4, \(x) ifelse(is.na(x), 0, x)),
+  mutate(
+    across(3:4, \(x) ifelse(is.na(x), 0, x)),
     Total = as.numeric(`Unit Price`) * as.numeric(Quantity) / N
   ) |>
   summarise(Result = sum(Total), .by = Stockist)

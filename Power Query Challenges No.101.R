@@ -9,17 +9,19 @@ df <- data.frame(
   value = c(2, 3, 5, 7, 11)
 )
 
-Combinations <- combinations(v = df$ID,r = 3,n = 5)
+Combinations <- combinations(v = df$ID, r = 3, n = 5)
 
 Table <- as.data.frame(Combinations)
 
 Answer <- Table |>
-  mutate(Index = row_number(),.before = V1) |>
-  pivot_longer(cols = -c(Index),values_to = "ID") |>
-  left_join(df,by = "ID") |>
-  summarise(`ID Combination` = paste(ID,collapse = ","),
-            `Total value (cost)` = sum(value)
-            ,.by = Index)
+  mutate(Index = row_number(), .before = V1) |>
+  pivot_longer(cols = -c(Index), values_to = "ID") |>
+  left_join(df, by = "ID") |>
+  summarise(
+    `ID Combination` = paste(ID, collapse = ","),
+    `Total value (cost)` = sum(value),
+    .by = Index
+  )
 
 
 Answer

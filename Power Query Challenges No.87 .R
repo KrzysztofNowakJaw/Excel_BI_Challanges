@@ -9,22 +9,22 @@ library(readxl)
 # Define the filename of the Excel file containing the grid data
 filename <- 'CH-087 Price List.xlsx'
 
-Prices <- read_xlsx(filename,range = 'B2:D9') 
-Transactions <- read_xlsx(filename,range = 'G2:I11')
-Expected <- read_xlsx(filename,range = 'G2:J11')
+Prices <- read_xlsx(filename, range = 'B2:D9')
+Transactions <- read_xlsx(filename, range = 'G2:I11')
+Expected <- read_xlsx(filename, range = 'G2:J11')
 
 Answer <- Transactions |>
-  inner_join(Prices,join_by(Product,closest(Date>=`From Date`))) |>
-  select(Date,Product,Quantity,Price)
+  inner_join(Prices, join_by(Product, closest(Date >= `From Date`))) |>
+  select(Date, Product, Quantity, Price)
 
 Answer
 
-all.equal(Answer,Expected)
+all.equal(Answer, Expected)
 
 #SQL solution
 
 # WITH Differences AS (
-#   SELECT 
+#   SELECT
 #   date,
 #   Transactions.product AS Product,
 #   price
@@ -34,8 +34,8 @@ all.equal(Answer,Expected)
 #   FROM Transactions
 #   INNER JOIN Prices ON Transactions.product = Prices.product AND Transactions.date >= Prices.from_date
 # )
-# 
-# SELECT 
+#
+# SELECT
 # date
 # ,Product
 # ,quantity

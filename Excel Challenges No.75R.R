@@ -7,19 +7,25 @@ filename <- "CH-75 Table Transformation.xlsx"
 df <- read_xlsx(filename, range = "B2:E20") |> mutate(Date = as.Date(Date))
 
 Answer <- df |>
-  group_by(Product,`Order ID`) |>
-  mutate(BaseDate = min(Date),
-         Difference = case_when(Quantity < 0 ~ as.numeric(Date - BaseDate),.default = NA)) |>
-  filter(!is.na(Difference)) |>
-  group_by(Product) |>
-  mutate(Total = sum(abs(Quantity)),
-         SubTotal = sum(Difference * abs(Quantity)),
-         Result = round(SubTotal/Total,2),
-         Result = sprintf("%.2f", Result)) |>
-  ungroup() |>
-  slice_head(n = 1,by = Product) |>
-  select(Product,Result) |>
-  arrange(Product)
+       group_by(Product, `Order ID`) |>
+       mutate(
+              BaseDate = min(Date),
+              Difference = case_when(
+                     Quantity < 0 ~ as.numeric(Date - BaseDate),
+                     .default = NA
+              )
+       ) |>
+       filter(!is.na(Difference)) |>
+       group_by(Product) |>
+       mutate(
+              Total = sum(abs(Quantity)),
+              SubTotal = sum(Difference * abs(Quantity)),
+              Result = round(SubTotal / Total, 2),
+              Result = sprintf("%.2f", Result)
+       ) |>
+       ungroup() |>
+       slice_head(n = 1, by = Product) |>
+       select(Product, Result) |>
+       arrange(Product)
 
 Answer
-

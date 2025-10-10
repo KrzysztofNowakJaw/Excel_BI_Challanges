@@ -3,19 +3,21 @@
 
 library(tidyverse)
 
-text <- c("International Business Machines",
-          "Central Processing Unit",
-          "Artificial Intelligence",
-          "Power Query",
-          "Power BI")
+text <- c(
+  "International Business Machines",
+  "Central Processing Unit",
+  "Artificial Intelligence",
+  "Power Query",
+  "Power BI"
+)
 
 df <- data.frame(Text = text)
 
 Answer <- df |>
   group_by(Original = Text) |>
-  separate_longer_delim(cols = Text,delim = ' ') |>
-  mutate(FirstLetter = str_extract(Text,"^.")) |>
+  separate_longer_delim(cols = Text, delim = ' ') |>
+  mutate(FirstLetter = str_extract(Text, "^.")) |>
   ungroup() |>
-  summarise(Answer = paste(FirstLetter,collapse = ''),.by = Original)
+  summarise(Answer = paste(FirstLetter, collapse = ''), .by = Original)
 
 Answer

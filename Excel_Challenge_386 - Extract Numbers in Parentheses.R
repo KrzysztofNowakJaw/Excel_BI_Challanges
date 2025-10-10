@@ -5,13 +5,16 @@ library(readxl)
 
 filename <- "Excel_Challenge_386 - Extract Numbers in Parentheses.xlsx"
 
-df <- read_xlsx(path = filename,range = "A1:A10") 
+df <- read_xlsx(path = filename, range = "A1:A10")
 
 pattern <- "(?<=\\()\\d+(?=\\))"
 
 Answer <- df |>
-  mutate(Answer = map_chr(String, ~ paste(unlist(str_extract_all(.,pattern)[[1]]),collapse = ",")))
+  mutate(
+    Answer = map_chr(
+      String,
+      ~ paste(unlist(str_extract_all(., pattern)[[1]]), collapse = ",")
+    )
+  )
 
 Answer
-
-

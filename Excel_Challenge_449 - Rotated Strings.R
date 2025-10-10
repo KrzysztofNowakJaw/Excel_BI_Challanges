@@ -7,15 +7,13 @@ library(readxl)
 
 filename <- "Excel_Challenge_449 - Rotated Strings.xlsx"
 
-df <- read_xlsx(filename, range = "A1:B10") 
+df <- read_xlsx(filename, range = "A1:B10")
 
-CheckRotation <- function(x,y) {
-
-Extended <- str_c(x,x)
-Check <- str_detect(Extended,y) & x != y
-return(Check)
+CheckRotation <- function(x, y) {
+  Extended <- str_c(x, x)
+  Check <- str_detect(Extended, y) & x != y
+  return(Check)
 }
 
 Answer <- df |>
-  filter(map2_lgl(String1,String2,CheckRotation))
-
+  filter(map2_lgl(String1, String2, CheckRotation))

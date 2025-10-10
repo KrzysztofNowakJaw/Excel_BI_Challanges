@@ -16,7 +16,11 @@ Tax <- Tax |>
 CalculateTax <- function(dataset) {
   Filtered <- dataset |>
     cross_join(Tax) |>
-    pivot_longer(cols = c(from, to), names_to = "Category", values_to = "Border") |>
+    pivot_longer(
+      cols = c(from, to),
+      names_to = "Category",
+      values_to = "Border"
+    ) |>
     mutate(
       AllBigger = cumall(income >= Border),
       AllBigger = ifelse(lag(AllBigger) == TRUE, TRUE, AllBigger)
@@ -25,7 +29,8 @@ CalculateTax <- function(dataset) {
 
   Answer <- Filtered |>
     mutate(
-      Border = case_when(row_number() == nrow(Filtered) ~ income,
+      Border = case_when(
+        row_number() == nrow(Filtered) ~ income,
         .default = Border
       ),
       Tax = coalesce((lead(Border) - Border), 0) * tax_rate
@@ -35,7 +40,9 @@ CalculateTax <- function(dataset) {
   return(Answer)
 }
 
-IteratePerRow <- lapply(seq_len(nrow(Main)), function(i) CalculateTax(Main[i, ]))
+IteratePerRow <- lapply(seq_len(nrow(Main)), function(i) {
+  CalculateTax(Main[i, ])
+})
 Result <- bind_rows(IteratePerRow)
 
 Result

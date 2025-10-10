@@ -4,10 +4,12 @@
 library(tidyverse)
 library(janitor)
 
-df = read_xlsx(File_name) 
+df = read_xlsx(File_name)
 
 df |>
-  separate_longer_delim(Data,delim = ' / ') |>
-  mutate(N = as.numeric(str_extract(Data,'\\d+')),
-         Data = trimws(str_remove_all(Data,'\\d+'))) |>
-  summarise(Answer = sum(N),.by = Data)
+       separate_longer_delim(Data, delim = ' / ') |>
+       mutate(
+              N = as.numeric(str_extract(Data, '\\d+')),
+              Data = trimws(str_remove_all(Data, '\\d+'))
+       ) |>
+       summarise(Answer = sum(N), .by = Data)

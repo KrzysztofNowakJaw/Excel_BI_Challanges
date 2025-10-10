@@ -17,7 +17,10 @@ Transposed <- Pivoted |>
   cross_join(Pivoted) |>
   filter(value.x == value.y & name.x != name.y) |>
   arrange(name.x, name.y) |>
-  mutate(Source = str_c(name.y, paste(value.y, collapse = ","), sep = "-"), .by = c(name.x, name.y)) |>
+  mutate(
+    Source = str_c(name.y, paste(value.y, collapse = ","), sep = "-"),
+    .by = c(name.x, name.y)
+  ) |>
   select(name.x, Source) |>
   unique() |>
   mutate(

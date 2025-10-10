@@ -3,22 +3,35 @@
 library(tidyverse)
 library(readxl)
 
-T1 <- read_xlsx("CH-114 Merge.xlsx", range = c("B3:C9"),,col_names = c('Date','Product_ID'))
-T2 <- read_xlsx("CH-114 Merge.xlsx", range = c("B14:C18"),col_names = c('Product_ID','Price'))
+T1 <- read_xlsx(
+  "CH-114 Merge.xlsx",
+  range = c("B3:C9"),
+  ,
+  col_names = c('Date', 'Product_ID')
+)
+T2 <- read_xlsx(
+  "CH-114 Merge.xlsx",
+  range = c("B14:C18"),
+  col_names = c('Product_ID', 'Price')
+)
 
 T2 <- T2 |>
-  mutate(Index = as.numeric(str_extract(Product_ID,"\\d+$")))
+  mutate(Index = as.numeric(str_extract(Product_ID, "\\d+$")))
 
 Solution <- T1 |>
   group_by(Date) |>
-  separate_longer_delim(Product_ID,delim = ',') |>
-  mutate(InitialProd = str_extract(Product_ID,"^x\\d+"),
-         ProdIndex = as.numeric(str_extract(InitialProd,"\\d+$"))) |>
-  left_join(T2,by = join_by(ProdIndex == Index)) |>
-  mutate(Price = as.character(Price),
-         Rows = n(),
-         NAS = sum(is.na(Price)),
-         Price = case_when(NAS == Rows ~ '-',.default = Price)) |>
+  separate_longer_delim(Product_ID, delim = ',') |>
+  mutate(
+    InitialProd = str_extract(Product_ID, "^x\\d+"),
+    ProdIndex = as.numeric(str_extract(InitialProd, "\\d+$"))
+  ) |>
+  left_join(T2, by = join_by(ProdIndex == Index)) |>
+  mutate(
+    Price = as.character(Price),
+    Rows = n(),
+    NAS = sum(is.na(Price)),
+    Price = case_when(NAS == Rows ~ '-', .default = Price)
+  ) |>
   filter(!is.na(Price)) |>
   slice_head(n = 1) |>
   ungroup() |>

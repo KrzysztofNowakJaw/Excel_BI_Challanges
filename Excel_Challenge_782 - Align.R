@@ -12,18 +12,15 @@ Categorized <- df |>
   mutate(LastBird = cumall(value != "Quantity")) |>
   filter(value != "Quantity") |>
   arrange(desc(LastBird), name) |>
-  select(value,LastBird)
+  select(value, LastBird)
 
-Answer <- 
+Answer <-
   Categorized |>
   filter(LastBird == TRUE) |>
-  bind_cols(Categorized |>
-              filter(LastBird == FALSE)) |>
+  bind_cols(
+    Categorized |>
+      filter(LastBird == FALSE)
+  ) |>
   select(contains('value'))
 
 names(Answer) <- c("Bird", "Quantity")
-
-
-
-
-

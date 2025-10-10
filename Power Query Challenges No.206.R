@@ -11,23 +11,21 @@ Problem <- c(
   '89A6B4'
 )
 
-EvenOdd <- function(x) { 
+EvenOdd <- function(x) {
+  Split <- str_split(x, "")[[1]]
 
-Split <- str_split(x,"")[[1]]
+  Characters <- length(Split)
 
-Characters <- length(Split)
+  Seq <- seq(from = 1, to = Characters, by = 1)
 
-Seq <- seq(from = 1,to = Characters,by = 1)
+  EvenIndices <- which(Seq %% 2 == 0)
+  OddIndices <- which(Seq %% 2 != 0)
 
-EvenIndices <- which(Seq %% 2 == 0)
-OddIndices <- which(Seq %% 2 != 0)
+  Even <- paste(Split[EvenIndices], collapse = "")
+  Odd <- paste(Split[OddIndices], collapse = "")
 
-Even <- paste(Split[EvenIndices],collapse = "")
-Odd <- paste(Split[OddIndices],collapse = "")
-
-tibble(Odd = Odd,
-       Even = Even)
+  tibble(Odd = Odd, Even = Even)
 }
 
-Answer <- map_df(Problem,EvenOdd)
+Answer <- map_df(Problem, EvenOdd)
 Answer

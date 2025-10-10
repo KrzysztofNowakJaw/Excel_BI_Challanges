@@ -15,9 +15,13 @@ df <- data.frame(
 )
 
 Answer <- df |>
-  pivot_longer(cols = 3:ncol(df),names_to = "Months",values_to = "Multiply") |>
+  pivot_longer(
+    cols = 3:ncol(df),
+    names_to = "Months",
+    values_to = "Multiply"
+  ) |>
   mutate(Amt = Amt * Multiply) |>
-  pivot_wider(id_cols  = Months,values_from = Amt,names_from = Customer) |>
-  janitor::adorn_totals(c("row","col"))
+  pivot_wider(id_cols = Months, values_from = Amt, names_from = Customer) |>
+  janitor::adorn_totals(c("row", "col"))
 
 Answer
