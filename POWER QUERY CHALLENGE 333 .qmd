@@ -1,0 +1,26 @@
+---
+title: "POWER QUERY CHALLENGE 333"
+format: html
+execute:
+  warning: false
+---
+
+```{r}
+library(tidyverse)
+library(readxl)
+library(janitor)
+library(gt)
+
+df <- read_xlsx('PQ_Challenge_333.xlsx',range = "A1:A4")
+
+df |>
+  separate_longer_delim(Data,', ') |>
+  separate_longer_delim(Data,' ') |>
+  mutate(Alpha = str_extract(Data,"[A-Z]")) |>
+  fill(Alpha,.direction = "down") |>
+  mutate(Data = as.numeric(str_remove_all(Data,"[A-Z]"))) |>
+  summarise(Answer = sum(Data),.by = Alpha) |>
+  adorn_totals() |>
+  gt()
+
+```
