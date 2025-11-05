@@ -1,4 +1,5 @@
 #https://www.linkedin.com/posts/omidmot_exclude-powerabrquery-excel-activity-7391580003722825728-3pGV?utm_source=share&utm_medium=member_desktop&rcm=ACoAACOAYFUBiUaa9Y4mEwqoxo7zB0wNDVUrSg0
+
 library(corrr)
 library(tidyverse)
 library(readxl)
