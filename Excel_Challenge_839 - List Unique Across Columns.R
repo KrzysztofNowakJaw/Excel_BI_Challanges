@@ -32,4 +32,5 @@ Clean_listed <- Piv_clean |>
 
 
 Answer <- apply(Clean_listed, 2, AlignList) |> as.data.frame()
+
 Answer
