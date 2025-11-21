@@ -8,8 +8,6 @@ df <- read_xlsx(File_name, range = "A2:C9") |> clean_names()
 
 
 CollatzSeq <- function(Base) {
-  Collatz <- Base
-
   while (Base != 1) {
     if (Base %% 2 == 0) {
       Base <- Base / 2
