@@ -22,7 +22,6 @@ CollatzSeq <- function(Base) {
   return(length(Collatz))
 }
 
-
 df |>
   select(1, 2) |>
   mutate(Answer = map_int(start_number, CollatzSeq)) |>
