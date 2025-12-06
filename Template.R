@@ -18,5 +18,7 @@ File_name <- str_extract(File_To_Move, '(?<=Downloads\\/).+.xlsx$')
 
 read_xlsx(File_name)
 
+File_name
+
 # Remove the file after reading
 fs::file_delete(File_name)
