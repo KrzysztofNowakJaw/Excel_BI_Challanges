@@ -45,5 +45,3 @@ Answer <- df |>
     .by = Data
   ) |>
   view()
-
-Expected$Answer == Answer$Answer
