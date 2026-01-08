@@ -21,6 +21,7 @@ Min_Prod <- function(x) {
     filter(Multiply == min(Products$Multiply)) |>
     unite("Answer", 1:3, sep = ",") |>
     mutate(Answer = paste0("(", Answer, ")")) |>
+    unique() |>
     summarise(Sequence = paste(Answer, collapse = ", "), .by = Multiply)
 }
 
