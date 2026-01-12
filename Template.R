@@ -27,3 +27,5 @@ Files <- fs::dir_info(path = '~/Desktop/ExcelBi/Excel_BI_Challanges') |>
   select(path)
 
 lapply(Files, FUN = fs::file_delete)
+
+rm(list = ls())
