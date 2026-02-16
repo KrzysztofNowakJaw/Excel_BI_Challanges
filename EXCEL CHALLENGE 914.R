@@ -1,4 +1,3 @@
-#Unfinished
 #https://www.linkedin.com/posts/excelbi_excel-challenge-problem-activity-7429011727662522368-c_TJ?utm_source=share&utm_medium=member_desktop&rcm=ACoAACOAYFUBiUaa9Y4mEwqoxo7zB0wNDVUrSg0
 
 library(tidyverse)
@@ -60,4 +59,5 @@ Answer <- df |>
   ) |>
   summarise(Sum = sum(Billed_Amount), .by = c(Resource))
 
-Answer
+Answer |>
+  view()
