@@ -16,7 +16,6 @@ df |>
   group_by(case_no) |>
   fill(everything(), .direction = "downup") |>
   mutate(Index = n(), contact = list(contact), .before = 1) |>
-  mutate() |>
   ungroup() |>
   rowwise() |>
   mutate(contact = contact[Index]) |>
