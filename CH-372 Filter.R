@@ -17,5 +17,6 @@ df <- tibble(
 df |>
   mutate(Numbers = str_extract_all(ID, '\\d{1}')) |>
   unnest(cols = Numbers) |>
-  filter(as.numeric(Numbers) %% 2 == 0) |>
+  filter(as.numeric(Numbers) %% 2 != 0) |>
+  select(ID) |>
   distinct()
