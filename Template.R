@@ -21,7 +21,7 @@ read_xlsx(File_name)
 File_name
 
 # Remove the file after reading
-Files <- fs::dir_info(path = '~/Desktop/ExcelBi/Excel_BI_Challanges') |>
+Files <- fs::dir_info(path = '~/Desktop/Excel_BI_Challanges') |>
   arrange(desc(modification_time)) |>
   filter(str_detect(path, '^.+\\.xlsx$')) |>
   select(path)
