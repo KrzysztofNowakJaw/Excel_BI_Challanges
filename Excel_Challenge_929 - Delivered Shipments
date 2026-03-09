@@ -1,0 +1,21 @@
+https://onedrive.live.com/:x:/g/personal/E11B26EEAACB7947/IQAe81MCB_LeRqOQOy9nnge5AQ0quxDfiPLTmjNl8Bou1mY?resid=E11B26EEAACB7947!s0253f31ef20746dea3903b2f679e07b9&ithint=file%2Cxlsx&e=e7gGQ5&migratedtospo=true&redeem=aHR0cHM6Ly8xZHJ2Lm1zL3gvYy9lMTFiMjZlZWFhY2I3OTQ3L0lRQWU4MU1DQl9MZVJxT1FPeTlubmdlNUFRMHF1eERmaVBMVG1qTmw4Qm91MW1ZP2U9ZTdnR1E1
+
+
+#Power Query UI solution
+
+let
+  Source = Excel.Workbook(File.Contents("/Excel_Challenge_929 - Delivered Shipments.xlsx"), null, true),
+  #"Navigation 1" = Source{[Item = "Sheet1", Kind = "Sheet"]}[Data],
+  #"Changed column type" = Table.TransformColumnTypes(#"Navigation 1", {{"Column1", type text}, {"Column3", type text}, {"Column4", type text}}),
+  #"Filtered rows" = Table.SelectRows(#"Changed column type", each ([Column1] <> null)),
+  #"Removed other columns" = Table.SelectColumns(#"Filtered rows", {"Column1"}),
+  #"Promoted headers" = Table.PromoteHeaders(#"Removed other columns", [PromoteAllScalars = true]),
+  #"Filtered rows 1" = Table.SelectRows(#"Promoted headers", each Text.Contains([Data], "DELIVERED")),
+  #"Split column by delimiter" = Table.SplitColumn(#"Filtered rows 1", "Data", Splitter.SplitTextByDelimiter("_"), {"Data.1", "Data.2", "Data.3","Data.4"}),
+  #"Removed columns" = Table.RemoveColumns(#"Split column by delimiter", {"Data.3"}),
+  #"Changed column type 1" = Table.TransformColumnTypes(#"Removed columns", {{"Data.1", type date}, {"Data.2", type text}, {"Data.4", Currency.Type}}),
+  #"Grouped rows" = Table.Group(#"Changed column type 1", {"Data.2"}, {{"Revenue", each List.Sum([Data.4]), type nullable number}, {"Last Date", each List.Max([Data.1]), type nullable date}}),
+  #"Sorted rows" = Table.Sort(#"Grouped rows", {{"Data.2", Order.Ascending}}),
+  #"Changed column type 2" = Table.TransformColumnTypes(#"Sorted rows", {{"Revenue", Currency.Type}})
+in
+  #"Changed column type 2"
