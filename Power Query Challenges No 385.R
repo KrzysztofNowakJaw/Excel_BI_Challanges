@@ -7,8 +7,6 @@ df <- read_xlsx(File_name, range = "B3:E10")
 
 Threshold <- as.Date('2024-08-14')
 
-Ex <- read_xlsx(File_name, range = "G3:J10")
-
 Answer <- df |>
   mutate(
     `Customer ID` = case_when(
