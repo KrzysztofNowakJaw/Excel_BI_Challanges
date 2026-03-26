@@ -2,6 +2,10 @@
 library(tidyverse)
 library(readr)
 
+#https://www.linkedin.com/posts/excelbi_excel-challenge-problem-activity-7442782383696670720-0qUJ?utm_source=share&utm_medium=member_desktop&rcm=ACoAACOAYFUBiUaa9Y4mEwqoxo7zB0wNDVUrSg0
+library(tidyverse)
+library(readr)
+
 
 df <- data.frame(
   Order_ID = c(
@@ -50,40 +54,22 @@ df <- data.frame(
   )
 )
 
-library(tidyverse)
-library(readr)
-
-Diff_Prod <- df |>
+Diff_Prod_New <- df |>
   inner_join(df, join_by(Order_ID), relationship = "many-to-many") |>
-  filter(Product.x != Product.y) |>
   select(Order_ID, Product.x, Product.y) |>
   mutate(
     Comb = pmap_chr(
       list(Product.x, Product.y),
       ~ paste(c(...), collapse = "-")
-    )
+    ),
+    .keep = "used"
   ) |>
-  group_by(Order_ID) |>
-  select(Order_ID, Comb) |>
-  unique() |>
-  ungroup() |>
   add_count(Comb) |>
   select(Comb, n) |>
   unique() |>
-  separate_wider_delim(cols = Comb, names = c("P1", "P2"), delim = "-")
+  separate_wider_delim(cols = Comb, names = c("P1", "P2"), delim = "-") |>
+  uncount(n)
 
-
-S <- df |>
-  summarise(
-    n = n(),
-    .by = Product
-  ) |>
-  mutate(P2 = Product, .after = Product) |>
-  rename(P1 = Product)
-
-
-Binded <- bind_rows(Diff_Prod, S) |> arrange(P1, P2) |> uncount(n)
-
-Result <- table(Binded$P1, Binded$P2)
+Result <- table(Diff_Prod_New$P1, Diff_Prod_New$P2)
 
 Result
