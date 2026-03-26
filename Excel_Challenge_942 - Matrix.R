@@ -2,10 +2,6 @@
 library(tidyverse)
 library(readr)
 
-#https://www.linkedin.com/posts/excelbi_excel-challenge-problem-activity-7442782383696670720-0qUJ?utm_source=share&utm_medium=member_desktop&rcm=ACoAACOAYFUBiUaa9Y4mEwqoxo7zB0wNDVUrSg0
-library(tidyverse)
-library(readr)
-
 
 df <- data.frame(
   Order_ID = c(
@@ -54,6 +50,22 @@ df <- data.frame(
   )
 )
 
+
+#Simplified
+
+R <- df |>
+  inner_join(df, join_by(Order_ID), relationship = "many-to-many") |>
+  select(Order_ID, Product.x, Product.y) |>
+  mutate(
+    Comb = paste(Product.x, Product.y, sep = "-"),
+    .keep = "used"
+  ) |>
+  separate_wider_delim(cols = Comb, names = c("P1", "P2"), delim = "-")
+
+
+table(R$P1, R$P2)
+
+#Old version
 Diff_Prod_New <- df |>
   inner_join(df, join_by(Order_ID), relationship = "many-to-many") |>
   select(Order_ID, Product.x, Product.y) |>
@@ -73,3 +85,4 @@ Diff_Prod_New <- df |>
 Result <- table(Diff_Prod_New$P1, Diff_Prod_New$P2)
 
 Result
+Diff_Prod_New
