@@ -6,7 +6,7 @@ library(readxl)
 
 df <- read_xlsx(File_name, range = "A1:A23")
 
-Answer <- df |>
+df |>
   cross_join(df) |>
   filter((Data.x != Data.y) & nchar(Data.x) == nchar(Data.y)) |>
   rowwise() |>
@@ -15,9 +15,8 @@ Answer <- df |>
     Y_Split = list(str_split_1(Data.y, ""))
   ) |>
   filter(length(setdiff(X_Split, Y_Split)) == 0) |>
-  select(contains('Data')) |>
-  group_by(Data.x) |>
-  reframe(Anagrams = list(Data.y)) |>
+  ungroup() |>
+  reframe(Anagrams = list(Data.y), .by = Data.x) |>
   rowwise() |>
   mutate(
     Anagrams = list(sort(append(Data.x, Anagrams))),
@@ -25,5 +24,3 @@ Answer <- df |>
   ) |>
   select(Anagrams) |>
   unique()
-
-Answer
