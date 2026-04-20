@@ -23,5 +23,6 @@ Answer <- T1 |>
   unnest(Comb) |>
   summarise(Comb = paste(Comb, collapse = "-"), .by = Index) |>
   summarise('Basket Count' = n() / 2, .by = Comb) |>
-  separate_wider_delim(Comb, names = c("Item1", "Item2"), delim = "-") |>
-  clipr::write_clip()
+  separate_wider_delim(Comb, names = c("Item1", "Item2"), delim = "-")
+
+Answer
