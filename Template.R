@@ -7,7 +7,6 @@ source(file = 'EBI_remove.R')
 #df <- read_xlsx(File_name,range = "B3:E10")
 
 #Ex <- read_xlsx()
-
 library(DBI)
 library(RPostgres)
 
@@ -28,7 +27,7 @@ con <- dbConnect(
 # Export dataframe to PostgreSQL
 dbWriteTable(
     conn = con,
-    name = "EBI959",
+    name = "Excel_Challenge_963",
     value = df,
     overwrite = TRUE,
     row.names = FALSE
