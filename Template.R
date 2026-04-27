@@ -11,7 +11,7 @@ library(DBI)
 library(RPostgres)
 
 # Read the Excel file
-df <- read_xlsx(File_name, range = "A1:C22")
+df <- read_xlsx(File_name, range = "A1:B22")
 
 df |> tail()
 
