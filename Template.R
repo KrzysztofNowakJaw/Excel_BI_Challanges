@@ -11,7 +11,8 @@ library(DBI)
 library(RPostgres)
 
 # Read the Excel file
-df <- read_xlsx(File_name, range = "B3:E10")
+df <- read_xlsx(File_name, range = "A1:C11")
+
 
 # Connect to PostgreSQL
 con <- dbConnect(
@@ -23,11 +24,12 @@ con <- dbConnect(
     password = "DomowySQL"
 )
 
+SQL_NAME <- str_remove(pluck(File_name, 1), "\\.xlsx$")
 
 # Export dataframe to PostgreSQL
 dbWriteTable(
     conn = con,
-    name = "Excel_Challenge_963",
+    name = SQL_NAME,
     value = df,
     overwrite = TRUE,
     row.names = FALSE
