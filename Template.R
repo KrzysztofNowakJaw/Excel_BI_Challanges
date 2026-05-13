@@ -12,7 +12,7 @@ library(RPostgres)
 
 # Read the Excel file
 df <- read_xlsx(File_name, range = "A1:B22")
-
+read_xlsx(File_name)
 df |> tail()
 
 # Connect to PostgreSQL
