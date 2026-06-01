@@ -24,12 +24,6 @@ Answer <- Grouping |>
     `Chain Total Value` = sum(Value),
     .by = c(User, DiffLog)
   ) |>
-  slice_max(order_by = `Chain Total Value`, n = 1, by = User) |>
-  inner_join(
-    Grouping |> select(DiffLog, contains("TimeStamp")),
-    join_by(DiffLog)
-  ) |>
-  select(-c(DiffLog, Timestamp)) |>
-  unique()
+  slice_max(order_by = `Chain Total Value`, n = 1, by = User)
 
 Answer |> view()
