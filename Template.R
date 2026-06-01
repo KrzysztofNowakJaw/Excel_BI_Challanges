@@ -11,11 +11,12 @@ library(DBI)
 library(RPostgres)
 
 # Read the Excel file
-df <- read_xlsx(File_name, range = "A1:B22")
-read_xlsx(File_name)
+df <- read_xlsx(File_name, range = "A1:B21")
 df |> tail()
 
 File_name
+
+names(df)
 
 # Connect to PostgreSQL
 con <- dbConnect(
