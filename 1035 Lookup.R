@@ -24,3 +24,6 @@ Result <- lapply(Accounts$Local_Acc, function(x) {
 
 Result |>
   view()
+
+
+?glob
