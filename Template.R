@@ -4,6 +4,7 @@ library(tidyverse)
 source(file = 'EBI_Load.R')
 source(file = 'EBI_remove.R')
 
+File_name
 #df <- read_xlsx(File_name,range = "B3:E10")
 
 #Ex <- read_xlsx()
@@ -11,7 +12,7 @@ library(DBI)
 library(RPostgres)
 
 # Read the Excel file
-df <- read_xlsx(File_name, range = "A1:A12")
+df <- read_xlsx(File_name, range = "B3:D14")
 df
 
 File_name
@@ -40,3 +41,4 @@ dbWriteTable(
 )
 
 # Close the connection
+db
