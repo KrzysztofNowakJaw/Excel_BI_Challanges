@@ -39,6 +39,3 @@ dbWriteTable(
     overwrite = TRUE,
     row.names = FALSE
 )
-
-# Close the connection
-db
